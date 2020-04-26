@@ -1,0 +1,7 @@
+*.pyc
+.idea
+.pyenv
+venv
+
+public/*
+!public/_static/

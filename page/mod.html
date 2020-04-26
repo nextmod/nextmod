@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% include 'fragment/head.html' %}
+		<title>Nextmods - {{ mod.info.name }}</title>
+		{{ include_css('_static/common.css', '_static/mod.css', '_static/mod-page.css') | safe }}
+	</head>
+	<body>
+		{% include 'fragment/header.html' %}
+		<div class="banner-container">
+			<img class="banner-image" src="{{ mod.image_banner }}">
+			<div class="banner-overlay-left">
+				<div class="banner-mod-category">{{ mod.info.category }}</div>
+				<div class="banner-mod-name">{{ mod.info.name }}</div>
+				<div class="banner-mod-last-update"><span>Last Update:</span>{{ mod.info.update_date }}</div>
+				<div class="banner-mod-author"><span>Author:</span>{{ mod.info.creator }}</div>
+			</div>
+			<div class="banner-overlay-right">
+					<div class="banner-install">Install</div>
+			</div>
+		</div>
+		<div class="preview-thumb-container">
+			{% for preview in mod.image_previews %}
+				<a class="preview-thumb-a" href="#{{ preview.id }}">
+					<img class="preview-thumb-img" src="{{ preview.thumb }}">
+				</a>
+			{% endfor %}
+		</div>
+		<div class="preview-grid-container">
+			{% for preview in mod.image_previews %}
+				<div class="preview-grid" id="{{ preview.id }}">
+					<div class="preview-image-back">
+						<img src="{{ preview.thumb }}">
+						<p>Loading ...</p>
+					</div>
+					<img class="preview-image-front" src="{{ preview.img }}" loading="lazy">
+					<a href="#{{ preview.prev_id }}" class="light-btn btn-prev">
+						<div class="preview-btn-lbl preview-btn-lbl-prev">Prev</div>
+					</a>
+					<a href="#{{ preview.next_id }}" class="light-btn btn-next">
+						<div class="preview-btn-lbl preview-btn-lbl-next">Next</div>
+					</a>
+					<a href="#_" class="light-btn btn-close">
+						<div class="preview-btn-lbl preview-btn-lbl-close">Close X</div>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
+		<ul class="tags-container">
+			{% for tag in mod.tags.entries %}
+				<li><a href="{{ relpath('tag', tag[0]+'.html') }}">{{ tag[1] }}</a></li>
+			{% endfor %}
+		</ul>
+		<details class="detail-info">
+			<summary>Info</summary>
+			<div clas="content">
+				{{ mod.info_html | safe }}
+			</div>
+		</details>
+		<main>
+			{{ mod.page_html | safe }}
+		</main>
+		{% include 'fragment/footer.html' %}
+	</body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% include 'fragment/head.html' %}
+		<title>Nextmods - About</title>
+		{{ include_css('_static/common.css') | safe }}
+	</head>
+	<body>
+	 	{% include 'fragment/header.html' %}
+		{{ about_html | safe }}
+		{% include 'fragment/footer.html' %}
+	</body>
+</html>

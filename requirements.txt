@@ -1,0 +1,5 @@
+GitPython
+python-gitlab
+jinja2
+Markdown
+Pillow

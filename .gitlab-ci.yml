@@ -1,0 +1,12 @@
+image: python:3.8-buster
+
+pages:
+  stage: deploy
+  script:
+  - pip install -r requirements.txt
+  - ./generate-page.py -s gitlab
+  artifacts:
+    paths:
+    - public/
+  only:
+  - master

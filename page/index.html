@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% include 'fragment/head.html' %}
+		{% if not group %}
+		<title>Nextmods</title>
+		{% else %}
+		<title>Nextmods - {{ group.name }}</title>
+		{% endif %}
+		{{ include_css('_static/common.css', '_static/index.css') | safe }}
+	</head>
+	<body>
+		{% include 'fragment/header.html' %}
+		{% if group %}
+		<h2>{{ group.spec.name_singular }}: {{ group_entry.name }}</h2>
+		{% endif %}
+		<ul class="sort-by">
+			{% for sort_link in sort_links %}
+			<li>
+				<a href="{{ relpath(sort_link.asc_url) }}">
+					<span class="name">{{ sort_link.name }}</span><span class="icon">↧</span>
+				</a>
+				<a href="{{ relpath(sort_link.dsc_url) }}">
+					<span class="icon">↥</span>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+		<ul class="mod-list">
+		{% for mod in mods %}
+			<li class="mod-tile">
+				<a href="{{ relpath(mod.link) }}">
+					<img class="mod-list-image" src="{{ relpath(mod.image_preview) }}">
+				</a>
+				<p class="name">{{ mod.info.name }}</p>
+				<p class="category">{{ mod.info.category }}</p>
+				<p class="author"><span>Author:</span>{{ mod.info.creator }}</p>
+				<p class="update_date"><span>Update date:</span>{{ mod.info.update_date }}</p>
+				<p class="release_date"><span>Release date:</span>{{ mod.info.release_date }}</p>
+				<p class="description">{{ mod.info.description }}</p>
+				<div class="footer">
+					<span>Files: {{ mod.data_files | count }}</span>
+					<span>Stars: {{ mod.star_count }}</span>
+				</div>
+			</li>
+		{% endfor %}
+		</ul>
+		{% include 'fragment/footer.html' %}
+	</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% include 'fragment/head.html' %}
+		<title>Nextmods - {{ group.spec.name }}</title>
+		{{ include_css('_static/common.css', '_static/group.css') | safe }}
+	</head>
+	<body>
+		{% include 'fragment/header.html' %}
+		<h2>{{ group.spec.name }}</h2>
+		<ul class="group-index-list">
+			{% for entry in group.entries %}
+			<li>
+				<a href="{{ relpath(group.spec.id, entry.id + '.html') }}">{{ entry.name }}</a>
+				<span>{{ entry.mods | length }}</span>
+			</li>
+			{% endfor %}
+		</ul>
+		{% include 'fragment/footer.html' %}
+	</body>
+</html>
