@@ -356,7 +356,7 @@ def render_index_pages(all_mods, all_grps):
 		id: str
 		name: str
 		reverse: bool
-		key_getter: Any
+		key_getter: Callable[[Mod], Any]
 		
 	class SortOrder(NamedTuple):
 		id: str
@@ -364,8 +364,9 @@ def render_index_pages(all_mods, all_grps):
 	
 	sort_bys = (
 		SortBy('', 'Update Date', True, lambda mod: mod.info.update_date),
-		SortBy('-nam', 'Name', False, lambda mod: mod.info.name),
-		SortBy('-rel', 'Release Date', True, lambda mod: mod.info.release_date),
+		SortBy('-name', 'Name', False, lambda mod: mod.info.name),
+		SortBy('-release-date', 'Release Date', True, lambda mod: mod.info.release_date),
+		SortBy('-file-count', 'File Count', False, lambda mod: len(mod.data_files)),
 	)
 	
 	sort_orders = (
