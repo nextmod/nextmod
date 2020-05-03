@@ -3,5 +3,7 @@
 .pyenv
 venv
 
+private-*
+
 public/*
 !public/_static/
