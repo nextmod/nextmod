@@ -47,6 +47,17 @@ jinja_env = Environment(
 	trim_blocks = True
 )
 
+def human_bytes(size):
+	for x in ['bytes', 'KB', 'MB', 'GB']:
+		if size < 1024.0:
+			return "%3.2f%s" % (size, x)
+		size /= 1024.0
+
+
+jinja_env.filters['human_bytes'] = human_bytes
+
+
+
 g_public_dir = Path('./public')
 
 image_processor = ImageProcessor()
@@ -73,6 +84,7 @@ class Mod:
 	page_html: str = ''
 	
 	data_files: Tuple[str] = field(default_factory=tuple)
+	data_files_size: int = 0
 
 
 class GroupSpec(NamedTuple):
@@ -121,6 +133,7 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 		
 		mod.star_count = mod_repository.get_star_count()
 		mod.data_files = mod_repository.list_data_files()
+		mod.data_files_size = sum(size for name, size in mod.data_files)
 		
 		mod.info.parse(mod_repository.get_file('mod-info.md'))
 		mod.tags.parse(mod_repository.get_file('tags.md'))
@@ -367,6 +380,7 @@ def render_index_pages(all_mods, all_grps):
 		SortBy('-name', 'Name', False, lambda mod: mod.info.name),
 		SortBy('-release-date', 'Release Date', True, lambda mod: mod.info.release_date),
 		SortBy('-file-count', 'File Count', False, lambda mod: len(mod.data_files)),
+		SortBy('-file-size', 'File Size', False, lambda mod: mod.data_files_size),
 	)
 	
 	sort_orders = (

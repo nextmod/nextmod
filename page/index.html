@@ -39,6 +39,7 @@
 				<p class="release_date"><span>Release date:</span>{{ mod.info.release_date }}</p>
 				<p class="description">{{ mod.info.description }}</p>
 				<div class="footer">
+					<span>Size: {{ mod.data_files_size | human_bytes }}</span>
 					<span>Files: {{ mod.data_files | count }}</span>
 					<span>Stars: {{ mod.star_count }}</span>
 				</div>

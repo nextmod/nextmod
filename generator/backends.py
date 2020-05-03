@@ -9,7 +9,12 @@ from gitlab import GitlabGetError
 
 from pathlib import Path
 from datetime import datetime
+from typing import Tuple, NamedTuple
 
+
+class ModDataFile(NamedTuple):
+	path: str
+	size: int
 
 class RepositorySource:
 	def list_mods(self):
@@ -47,15 +52,17 @@ class DirectoryProject(Repository):
 		for file_name in os.listdir(foo):
 			yield file_name
 	
-	def list_data_files(self):
+	def list_data_files(self) -> Tuple[ModDataFile]:
 		data_path = self.p_path / 'data'
-		
 		result = []
 		for root, dirs, files in os.walk(data_path):
-			asd = Path(root).relative_to(data_path)
+			root_path = Path(root)
+			rel_dir = root_path.relative_to(data_path)
 			for name in files:
-				p = asd / name
-				result.append((str(p), 0))
+				abs_path = root_path / name
+				rel_path = rel_dir / name
+				size = abs_path.stat().st_size
+				result.append(ModDataFile(str(rel_path), size))
 		return tuple(result)
 
 	def get_file(self, file_path):
@@ -111,9 +118,9 @@ class GitlabProject:
 					continue
 				blob_id = f['id']
 				path = f['path']
-				# file_info = self.p_project.repository_blob(blob_id)
-				#size = 0 # file_info['size']
-				result.append((path, 0))
+				file_info = self.p_project.repository_blob(blob_id)
+				size = file_info['size']
+				result.append(ModDataFile(path, size))
 			return tuple(result)
 		except GitlabGetError:
 			return []
