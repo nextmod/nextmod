@@ -126,11 +126,7 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 		
 		mod = Mod(repository=mod_repository)
 		mod.id = mod_repository.id
-		
-		date = mod_repository.get_last_update()
-		date_string = date.strftime('%Y-%m-%d %H:%M')
-		mod.last_updated = date_string
-		
+				
 		mod.star_count = mod_repository.get_star_count()
 		mod.data_files = mod_repository.list_data_files()
 		mod.data_files_size = sum(size for name, size in mod.data_files)

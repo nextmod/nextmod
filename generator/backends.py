@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import os
-import git
 
 import gitlab
 from gitlab import GitlabGetError
@@ -71,12 +70,6 @@ class DirectoryProject(Repository):
 			return None
 		with open(foo, mode='rb') as file:
 			return file.read()
-
-	def get_last_update(self):
-		repo = git.Repo(self.p_path)
-		headcommit = repo.head.commit
-		date_time = datetime.fromtimestamp(headcommit.committed_date)
-		return date_time
 	
 	def get_star_count(self):
 		return -1;
@@ -132,15 +125,7 @@ class GitlabProject:
 			return file_data
 		except GitlabGetError:
 			return None
-	
-	def get_last_update(self):
-		commits = self.p_project.commits.list(ref_name='master')
-		commit = commits[0]
-		if commit:
-			date = datetime.fromisoformat(commit.authored_date)
-			return date
-		else:
-			return None
-	
+		
+		
 	def get_star_count(self):
 		return self.p_project.attributes['star_count']
