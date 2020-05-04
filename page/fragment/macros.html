@@ -17,7 +17,7 @@
 	<a href="{{ 'index.html' | makepath }}">Nextmods</a>
 	<div class='spacer'></div>
 	{% for group in groups %}
-	<a href="{{ (group.spec.id) | makepath }}">{{group.spec.name}}</a>
+	<a href="{{ (group.spec.id, 'index.html') | makepath }}">{{group.spec.name}}</a>
 	{% endfor %}
 	<div class="expander"></div>
 	<a href="{{ 'about.html' | makepath }}">About</a>
