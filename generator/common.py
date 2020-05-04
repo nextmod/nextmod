@@ -17,8 +17,8 @@ logging.basicConfig(
 	datefmt='%Y-%m-%d %H:%M:%S')
 
 # logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+g_log = logging.getLogger()
+g_log.setLevel(logging.INFO)
 
 g_public_dir = Path('./public')
 

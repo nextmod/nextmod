@@ -8,7 +8,7 @@ from PIL import Image
 import markdown
 from generator.markdown_flavour import NextmodMarkdown
 
-from .common import g_public_dir, logger, Mod, PreviewEntry
+from .common import g_public_dir, g_log, Mod, PreviewEntry
 from .render import render_main_page
 
 def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
@@ -37,8 +37,8 @@ def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
 			image = Image.open(io.BytesIO(image_data))
 		# image.verify()
 		except Exception as ex:
-			logger.log("Failed to load image: {}".format(input_file_name))
-			logger.exception(ex)
+			g_log.log("Failed to load image: {}".format(input_file_name))
+			g_log.exception(ex)
 			continue
 		
 		transcode_image = False
@@ -97,7 +97,7 @@ def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
 						thumb_pictures.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
 				
 				except Exception as ex:
-					logger.warning("Failed to write: {}", image_id, ex)
+					g_log.warning("Failed to write: {}", image_id, ex)
 			
 			thumb_url = 'images/{}'.format(thumb_file_name)
 			

@@ -21,13 +21,13 @@ from generator.source_gitlab import GitlabSource
 image_processor = ImageProcessor()
 
 def load_mod_repositories(repositories) -> Tuple[Mod]:
-	logger.info('Loading mod data ...')
+	g_log.info('Loading mod data ...')
 
 	foo = list(repositories)
 
 	mods = []
 	for mod_repository in foo:
-		logger.info('Loading mod data: %s', mod_repository.id)
+		g_log.info('Loading mod data: %s', mod_repository.id)
 		
 		mod = Mod(repository=mod_repository)
 		mod.id = mod_repository.id
@@ -123,22 +123,22 @@ def main():
 	all_grps = build_groups(all_mods)
 
 	for mod in all_mods:
-		logger.info('Generating mod page for: {}'.format(mod.repository.id))
+		g_log.info('Generating mod page for: {}'.format(mod.repository.id))
 		try:
 			render_mod_page(app_args, all_mods, all_grps, mod)
 		except Exception as ex:
-			logger.exception(ex)
+			g_log.exception(ex)
 
-	logger.info('Generating search data')
+	g_log.info('Generating search data')
 	generate_search_data(all_mods)
 	
-	logger.info("Rendering Common pages")
+	g_log.info("Rendering Common pages")
 	render_about_page(all_mods, all_grps)
 	
-	logger.info('Generating index pages')	
+	g_log.info('Generating index pages')
 	render_index_pages(all_mods, all_grps)
 
-	logger.info('DONE')
+	g_log.info('DONE')
 
 
 if __name__ == "__main__":
