@@ -2,13 +2,13 @@
 <html>
 	{% import 'fragment/macros.html' as macro %}
 	<head>
-		{{ macro.head() }}
+		{{ macro.head() | ind(2) }}
 		<title>Nextmods - About</title>
-		{{ include_css('_static/common.css') | safe }}
+		{{ macro.style(('_static/common.css')) | ind(2) }}
 	</head>
 	<body>
-	 	{% include 'fragment/header.html' %}
-		{{ about_html | safe }}
-		{{ macro.footer() }}
+	 	{{ macro.header(groups) | ind(2) }}
+		{{ about_html | safe | ind(2) }}
+		{{ macro.footer() | ind(2) }}
 	</body>
 </html>

@@ -14,8 +14,8 @@ from generator.common import g_public_dir
 jinja_env = Environment(
 	loader=FileSystemLoader(['./page', './page-templates']),
 	autoescape=select_autoescape(['html', 'xml']),
-	lstrip_blocks = True,
-	trim_blocks = True
+	lstrip_blocks=True,
+	trim_blocks=True
 )
 
 jinja_env.globals['g_page_generation_time'] = datetime.now()
@@ -26,14 +26,21 @@ def human_bytes(size):
 		if size < 1024.0:
 			return "%3.2f%s" % (size, x)
 		size /= 1024.0
-
-
+		
 jinja_env.filters['human_bytes'] = human_bytes
+
+from markupsafe import Markup
+
+def html_indent(s, depth):
+	newline = Markup("\n")
+	s += newline
+	rv = (newline + Markup("\t" * depth)).join(s.splitlines())
+	return rv
+
+jinja_env.filters['ind'] = html_indent
 
 
 def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: PurePath = None):
-	
-	template = jinja_env.get_template(str(page_name))
 	
 	if not out_page_name:
 		out_page_name = page_name
@@ -52,24 +59,17 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 	render_dict['mkref'] = mkref
 	
 	def foo(*args):
-		asf = PurePath(*args)
+		if len(args) == 1 and isinstance(args[0], tuple):
+			asf = PurePath(*args[0])
+		else:
+			asf = PurePath(*args)
 		
 		res = PurePath(current_relref) / asf
 		return res
 	
 	jinja_env.filters['relpath'] = foo
-	render_dict['relpath'] = foo
 	
-	def include_css(*paths):
-		lines = []
-		for path in paths:
-			foo = current_relref + '/' + path
-			line = '<link rel="stylesheet" href="{}">'.format(foo)
-			lines.append(line)
-		return '\n'.join(lines)
-	
-	render_dict['include_css'] = include_css
-	
+	template = jinja_env.get_template(str(page_name))
 	rendered = template.render(render_dict)
 	
 	p = g_public_dir / out_page_name

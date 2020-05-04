@@ -2,21 +2,21 @@
 <html>
 	{% import 'fragment/macros.html' as macro %}
 	<head>
-		{{ macro.head() }}
+		{{ macro.head() | ind(2) }}
 		<title>Nextmods - {{ group.spec.name }}</title>
-		{{ include_css('_static/common.css', '_static/group.css') | safe }}
+		{{ macro.style(('_static/common.css', '_static/group.css')) | ind(2) }}
 	</head>
 	<body>
-		{% include 'fragment/header.html' %}
+		{{ macro.header(groups) | ind(2) }}
 		<h2>{{ group.spec.name }}</h2>
 		<ul class="group-index-list">
 			{% for entry in group.entries %}
 			<li>
-				<a href="{{ relpath(group.spec.id, entry.id + '.html') }}">{{ entry.name }}</a>
+				<a href="{{ (group.spec.id, entry.id + '.html') | relpath }}">{{ entry.name }}</a>
 				<span>{{ entry.mods | length }}</span>
 			</li>
 			{% endfor %}
 		</ul>
-		{{ macro.footer() }}
+		{{ macro.footer() | ind(2) }}
 	</body>
 </html>

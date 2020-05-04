@@ -2,26 +2,26 @@
 <html>
 	{% import 'fragment/macros.html' as macro %}
 	<head>
-		{{ macro.head() }}
+		{{ macro.head() | ind(2) }}
 		{% if not group %}
 		<title>Nextmods</title>
 		{% else %}
 		<title>Nextmods - {{ group.name }}</title>
 		{% endif %}
-		{{ include_css('_static/common.css', '_static/index.css') | safe }}
+		{{ macro.style(('_static/common.css', '_static/index.css')) | ind(2) }}
 	</head>
 	<body>
-		{% include 'fragment/header.html' %}
+		{{ macro.header(groups) | ind(2) }}
 		{% if group %}
 		<h2>{{ group.spec.name_singular }}: {{ group_entry.name }}</h2>
 		{% endif %}
 		<ul class="sort-by">
 			{% for sort_link in sort_links %}
 			<li>
-				<a href="{{ relpath(sort_link.asc_url) }}">
+				<a href="{{ sort_link.asc_url | relpath }}">
 					<span class="name">{{ sort_link.name }}</span><span class="icon">↧</span>
 				</a>
-				<a href="{{ relpath(sort_link.dsc_url) }}">
+				<a href="{{ sort_link.dsc_url | relpath }}">
 					<span class="icon">↥</span>
 				</a>
 			</li>
@@ -30,10 +30,8 @@
 		<ul class="mod-list">
 		{% for mod in mods %}
 			<li class="mod-tile">
-				<a href="{{ relpath(mod.link) }}">
-					{{ macro.picture(mod.picture_preview) }}
-					
-					<!--<img class="mod-list-image" src="{{ relpath(mod.image_preview) }}">-->
+				<a href="{{ mod.link | relpath }}">
+					{{ macro.picture(mod.picture_preview) | ind(5) }}
 				</a>
 				<p class="name">{{ mod.info.name }}</p>
 				<p class="category">{{ mod.info.category }}</p>
@@ -49,6 +47,6 @@
 			</li>
 		{% endfor %}
 		</ul>
-		{{ macro.footer() }}
+		{{ macro.footer() | ind(2) }}
 	</body>
 </html>

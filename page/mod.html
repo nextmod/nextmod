@@ -2,14 +2,14 @@
 <html>
 	{% import 'fragment/macros.html' as macro %}
 	<head>
-		{{ macro.head() }}
+		{{ macro.head() | ind(2) }}
 		<title>Nextmods - {{ mod.info.name }}</title>
-		{{ include_css('_static/common.css', '_static/mod.css', '_static/mod-page.css') | safe }}
+		{{ macro.style(('_static/common.css', '_static/mod.css', '_static/mod-page.css')) | ind(2) }}
 	</head>
 	<body>
-		{% include 'fragment/header.html' %}
+		{{ macro.header(groups) | ind(2) }}
 		<div class="banner-container">
-			{{ macro.picture(mod.banner_picture, 'banner-image') }}
+			{{ macro.picture(mod.banner_picture, 'banner-image') | ind(3) }}
 			<div class="banner-overlay-left">
 				<div class="banner-mod-category">{{ mod.info.category }}</div>
 				<div class="banner-mod-name">{{ mod.info.name }}</div>
@@ -23,7 +23,7 @@
 		<div class="preview-thumb-container">
 			{% for preview in mod.image_previews %}
 				<a class="preview-thumb-a" href="#{{ preview.id }}">
-					{{ macro.picture(preview.thumb_pictures, 'preview-thumb-img') }}
+					{{ macro.picture(preview.thumb_pictures, 'preview-thumb-img') | ind(5) }}
 				</a>
 			{% endfor %}
 		</div>
@@ -31,10 +31,10 @@
 			{% for preview in mod.image_previews %}
 				<div class="preview-grid" id="{{ preview.id }}">
 					<div class="preview-image-back">
-						{{ macro.picture(preview.thumb_pictures, 'preview-thumb-img') }}
+						{{ macro.picture(preview.thumb_pictures, 'preview-thumb-img') | ind(6) }}
 						<p>Loading ...</p>
 					</div>
-					{{ macro.picture(preview.picture, 'preview-image-front', 'lazy') }}
+					{{ macro.picture(preview.picture, 'preview-image-front', 'lazy') | ind(5) }}
 					<a href="#{{ preview.prev_id }}" class="light-btn btn-prev">
 						<div class="preview-btn-lbl preview-btn-lbl-prev">Prev</div>
 					</a>
@@ -49,18 +49,18 @@
 		</div>
 		<ul class="tags-container">
 			{% for tag in mod.info.tags %}
-				<li><a href="{{ relpath('tag', tag[0]+'.html') }}">{{ tag[1] }}</a></li>
+				<li><a href="{{ ('tag', tag[0]+'.html') | relpath }}">{{ tag[1] }}</a></li>
 			{% endfor %}
 		</ul>
 		<details class="detail-info">
 			<summary>Info</summary>
 			<div clas="content">
-				{{ mod.info_html | safe }}
+				{{ mod.info_html | safe | ind(4) }}
 			</div>
 		</details>
 		<main>
-			{{ mod.page_html | safe }}
+			{{ mod.page_html | safe | ind(3) }}
 		</main>
-		{{ macro.footer() }}
+		{{ macro.footer() | ind(2) }}
 	</body>
 </html>
