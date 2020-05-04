@@ -20,7 +20,7 @@ from generator.image_processor import ImageProcessor
 import re
 from PIL import Image
 from dataclasses import field
-from enum import Enum
+from datetime import datetime
 
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -46,6 +46,9 @@ jinja_env = Environment(
 	lstrip_blocks = True,
 	trim_blocks = True
 )
+
+jinja_env.globals['g_page_generation_time'] = datetime.now()
+
 
 def human_bytes(size):
 	for x in ['bytes', 'KB', 'MB', 'GB']:
@@ -114,8 +117,7 @@ class PreviewEntry:
 	thumb_pictures: List
 
 
-from datetime import datetime
-page_generation_time = datetime.now()
+
 
 def load_mod_repositories(repositories) -> Tuple[Mod]:
 	logger.info('Loading mod data ...')
@@ -209,8 +211,6 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 		return '\n'.join(lines)
 	
 	render_dict['include_css'] = include_css
-	
-	render_dict['page_generation_time'] = page_generation_time
 
 	rendered = template.render(render_dict)
 
