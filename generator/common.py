@@ -5,7 +5,7 @@ import logging
 
 from typing import Callable
 
-from generator.backends import *
+from generator.source import *
 from generator.file_parsers import *
 
 
