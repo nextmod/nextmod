@@ -2,7 +2,7 @@
 <html>
 	{% import 'fragment/macros.html' as macro %}
 	<head>
-		{% include 'fragment/head.html' %}
+		{{ macro.head() }}
 		{% if not group %}
 		<title>Nextmods</title>
 		{% else %}

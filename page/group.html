@@ -2,7 +2,7 @@
 <html>
 	{% import 'fragment/macros.html' as macro %}
 	<head>
-		{% include 'fragment/head.html' %}
+		{{ macro.head() }}
 		<title>Nextmods - {{ group.spec.name }}</title>
 		{{ include_css('_static/common.css', '_static/group.css') | safe }}
 	</head>
