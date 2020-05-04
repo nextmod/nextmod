@@ -3,121 +3,15 @@
 # Copyright (c) 2020, Eli2
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import os
-import io
-import logging
+
 import argparse
-
-from pathlib import Path, PurePath
-from dataclasses import dataclass
 from collections import defaultdict
-from typing import Any, NamedTuple, List, Set, Tuple, Dict, Callable
-
-from datetime import time
-from datetime import datetime
-
 from generator.image_processor import ImageProcessor
-import re
-from PIL import Image
-from dataclasses import field
-from datetime import datetime
+from generator.render_mod import *
+from generator.render_index import *
 
-
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-import markdown
-
-from generator.backends import *
-from generator.file_parsers import *
-from generator.markdown_flavour import NextmodMarkdown
-
-logging.basicConfig(
-	format='%(asctime)s %(levelname)-8s %(message)s',
-	level=logging.INFO,
-	datefmt='%Y-%m-%d %H:%M:%S')
-
-# logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-
-jinja_env = Environment(
-	loader=FileSystemLoader(['./page', './page-templates']),
-	autoescape=select_autoescape(['html', 'xml']),
-	lstrip_blocks = True,
-	trim_blocks = True
-)
-
-jinja_env.globals['g_page_generation_time'] = datetime.now()
-
-
-def human_bytes(size):
-	for x in ['bytes', 'KB', 'MB', 'GB']:
-		if size < 1024.0:
-			return "%3.2f%s" % (size, x)
-		size /= 1024.0
-
-
-jinja_env.filters['human_bytes'] = human_bytes
-
-
-
-g_public_dir = Path('./public')
 
 image_processor = ImageProcessor()
-
-
-@dataclass
-class Mod:
-	repository: Repository
-	id: int = 0
-	name: str = ''
-	link: str = ''
-	banner_picture: str = ''
-	image_preview: str = ''
-	picture_preview: str = field(default_factory=list)
-	image_gallery: List = field(default_factory=list)
-	authors: str = ''
-	description: str = ''
-	last_updated: str = ''
-	star_count: int = 0
-
-	info: InfoFile = field(default_factory=InfoFile)
-	tags: TagsFile = field(default_factory=TagsFile)
-
-	info_html: str = ''
-	page_html: str = ''
-	
-	data_files: Tuple[str] = field(default_factory=tuple)
-	data_files_size: int = 0
-
-
-class GroupSpec(NamedTuple):
-	id: str
-	name: str
-	name_singular: str
-	key_getter: Callable[[Mod], List[Tuple[str, str]]]
-
-class GroupEntry(NamedTuple):
-	id: str
-	name: str
-	mods: Tuple[Mod]
-
-class Group(NamedTuple):
-	spec: GroupSpec
-	entries: Tuple[GroupEntry]
-
-
-@dataclass
-class PreviewEntry:
-	id: str
-	next_id: str
-	prev_id: str
-	picture: str
-	thumb: str
-	thumb_pictures: List
-
-
-
 
 def load_mod_repositories(repositories) -> Tuple[Mod]:
 	logger.info('Loading mod data ...')
@@ -175,205 +69,12 @@ def build_groups(all_mods: Tuple[Mod]) -> Tuple[Group]:
 	return tuple(groups)
 
 
-def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: PurePath = None):
+def render_about_page(all_mods, all_grps):
 	
-	template = jinja_env.get_template(str(page_name))
-
-	if not out_page_name:
-		out_page_name = page_name
-
-	depth = len(out_page_name.parts) - 1
-	if depth == 0:
-		current_relref = '.'
-	else:
-		current_relref = '/'.join(['..'] * depth)
-
-	def mkref(base, name, suffix):
-		foo = [base, name, suffix]
-		res = current_relref + '/' + '/'.join(foo)
-		return res
-	
-	render_dict['mkref'] = mkref
-
-	def foo(*args):
-		res = current_relref + '/' + '/'.join(args)
-		return res
-	
-	jinja_env.filters['relpath'] = foo
-	render_dict['relpath'] = foo
-	
-	def include_css(*paths):
-		lines = []
-		for path in paths:
-			foo = current_relref + '/' + path
-			line = '<link rel="stylesheet" href="{}">'.format(foo)
-			lines.append(line)
-		return '\n'.join(lines)
-	
-	render_dict['include_css'] = include_css
-
-	rendered = template.render(render_dict)
-
-	p = g_public_dir / out_page_name
-	os.makedirs(p.parent, exist_ok=True)
-
-	with open(p, 'w') as f:
-		f.write(rendered)
-
-
-def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
-
-	out_mod_dir = g_public_dir / 'mw' / str(mod.id)
-	out_mod_dir.mkdir(parents=True, exist_ok=True)
-
-	out_img_dir = out_mod_dir / 'images'
-	out_img_dir.mkdir(parents=True, exist_ok=True)
-
-	mod.link = 'mw/{}/index.html'.format(mod.id)
-
-	# images
-
-	banner_picture = None
-	image_previews = []
-
-	page_images_gen = mod.repository.list_dir(dir_path='images')
-	for input_file_name in page_images_gen:
-		if input_file_name.startswith('preview.md'):
-			continue
-
-		image_id = input_file_name.split('.')[0]
-
-		try:
-			image_data = mod.repository.get_file(file_path='images/' + input_file_name)
-			image = Image.open(io.BytesIO(image_data))
-		# image.verify()
-		except Exception as ex:
-			logger.log("Failed to load image: {}".format(input_file_name))
-			logger.exception(ex)
-			continue
-
-		transcode_image = False
-		image_formats_to_transcode_lossless = ['PNG']
-		if image.format in image_formats_to_transcode_lossless:
-			image_output_file_name = image_id + '.webp'
-			transcode_image = True
-		else:
-			image_output_file_name = input_file_name
-
-		if app_args.dev_skip_image_transcode:
-			transcode_image = False
-		
-		picture = []
-		if transcode_image:
-			img = image.convert('RGB')
-			name = image_id + '.jpg'
-			with open(out_img_dir / name, 'wb') as f:
-				img.save(f, 'JPEG')
-				picture.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
-			
-			name = image_id + '.webp'
-			with open(out_img_dir / name, 'wb') as f:
-				image.save(f, 'WebP', quality=100)
-				picture.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
-			
-		else:
-			name = input_file_name
-			with open(out_img_dir / image_output_file_name, 'wb') as f:
-				image.save(f)
-				picture.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
-		
-		
-		if input_file_name.startswith('banner'):
-			banner_picture = picture
-		elif input_file_name.startswith('preview'):
-			thumb_file_name = image_id + '_thumb.webp'
-			
-			thumb_pictures = []
-
-			if app_args.dev_skip_image_transcode:
-				pass
-			else:
-				thumb = image.copy()
-				thumb_size = (360, 360)
-				thumb.thumbnail(thumb_size, Image.ANTIALIAS)
-				try:
-					img = thumb.convert('RGB')
-					name = image_id + '_thumb.jpg'
-					with open(out_img_dir / name, 'wb') as f:
-						img.save(f, 'JPEG')
-						thumb_pictures.append(('mw/' + mod.id + '/images/' + name, 'image/jpeg'))
-					
-					name = image_id + '_thumb.webp'
-					with open(out_img_dir / name, 'wb') as f:
-						thumb.save(f, 'WebP')
-						thumb_pictures.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
-						
-				except Exception as ex:
-					logger.warning("Failed to write: {}", image_id, ex)
-
-			thumb_url = 'images/{}'.format(thumb_file_name)
-
-			e = PreviewEntry(
-				id=image_id,
-				prev_id=None,
-				next_id=None,
-				picture=picture,
-				thumb=thumb_url,
-				thumb_pictures=thumb_pictures
-			)
-			
-			image_previews.append(e)
-
-	image_previews.sort(key=lambda x: x.id)
-
-	for i, preview in enumerate(image_previews):
-		if i == 0:
-			preview.prev_id = image_previews[-1].id
-			preview.next_id = image_previews[i + 1].id
-		elif i == len(image_previews) - 1:
-			preview.prev_id = image_previews[i - 1].id
-			preview.next_id = image_previews[0].id
-		else:
-			preview.prev_id = image_previews[i - 1].id
-			preview.next_id = image_previews[i + 1].id
-
-	mod.banner_picture = banner_picture
-	mod.image_previews = image_previews
-	
-	mod.picture_preview = mod.image_previews[0].thumb_pictures
-	mod.image_preview = 'mw/' + mod.id + '/' + mod.image_previews[0].thumb
-
-	# page
-	page_files_gen = mod.repository.list_dir(dir_path='page')
-	for file_name in page_files_gen:
-		if file_name.endswith('.md'):
-			continue
-
-		file_data = mod.repository.get_file(file_path='page/' + file_name)
-		with open(out_mod_dir / file_name, 'wb') as f:
-			f.write(file_data)
-
-	info_data = mod.repository.get_file(file_path='mod-info.md')
-	page_data = mod.repository.get_file(file_path='page/page.md')
-
-	if info_data:
-		mod.info_html = markdown.markdown(info_data.decode('utf-8'), extensions=[])
-
-	if page_data:
-		mod.page_html = markdown.markdown(page_data.decode('utf-8'), extensions=['nl2br', NextmodMarkdown()])
-
-	out_path = PurePath('mw') / str(mod.id) / 'index.html'
-
 	render_args = {
 		'mods': all_mods,
-		'groups': all_grps,
-		'mod': mod
+		'groups': all_grps
 	}
-
-	render_main_page(PurePath('mod.html'), render_args, out_path)
-
-
-def render_about_page(render_args):
 	
 	path = Path('./about.md')
 	with open(path, 'r') as file:
@@ -384,80 +85,6 @@ def render_about_page(render_args):
 	cpy['about_html'] = about_html
 	render_main_page(PurePath('about.html'), cpy)
 
-
-def render_index_pages(all_mods, all_grps):
-
-	render_args = {
-		'mods': all_mods,
-		'groups': all_grps
-	}
-	
-	render_about_page(render_args)
-	
-	class SortBy(NamedTuple):
-		id: str
-		name: str
-		reverse: bool
-		key_getter: Callable[[Mod], Any]
-		
-	class SortOrder(NamedTuple):
-		id: str
-		reverse: bool
-	
-	sort_bys = (
-		SortBy('', 'Update Date', True, lambda mod: mod.info.update_date),
-		SortBy('-name', 'Name', False, lambda mod: mod.info.name),
-		SortBy('-release-date', 'Release Date', True, lambda mod: mod.info.release_date),
-		SortBy('-file-count', 'File Count', False, lambda mod: len(mod.data_files)),
-		SortBy('-file-size', 'File Size', False, lambda mod: mod.data_files_size),
-	)
-	
-	sort_orders = (
-		SortOrder('', False),
-		SortOrder('-dsc', True)
-	)
-	
-	def render_mod_index(base_name, mods):
-		
-		class SortLink(NamedTuple):
-			name: str
-			asc_url: str
-			dsc_url: str
-		
-		sort_links = []
-		for sort_by in sort_bys:
-			sort_links.append(SortLink(
-				name=sort_by.name,
-				asc_url=base_name + sort_by.id + '.html',
-				dsc_url=base_name + sort_by.id + '-dsc.html'
-			))
-		render_args['sort_links'] = sort_links
-		
-		for sort_by in sort_bys:
-			render_args['sort_by'] = sort_by
-			for sort_order in sort_orders:
-				render_args['sort_order'] = sort_order
-				file_name = PurePath(base_name + sort_by.id + sort_order.id + '.html')
-				
-				reverse = sort_by.reverse
-				if sort_order.reverse:
-					reverse = not reverse
-				
-				sorted_mods = list(mods)
-				sorted_mods.sort(key=sort_by.key_getter, reverse=reverse)
-					
-				render_args['mods'] = sorted_mods
-				render_args['base_name'] = base_name
-				render_main_page(PurePath('index.html'), render_args, file_name)
-	
-	render_mod_index('index', all_mods)
-	
-	for group in all_grps:
-		render_args['group'] = group
-		render_main_page(PurePath('group.html'), render_args, PurePath(group.spec.id, 'index.html'))
-		for entry in group.entries:
-			render_args['group_entry'] = entry
-			render_mod_index(group.spec.id + '/' + entry.id, entry.mods)
 
 
 def generate_search_data(all_mods: Tuple[Mod]):
@@ -515,8 +142,11 @@ def main():
 
 	logger.info('Generating search data')
 	generate_search_data(all_mods)
-
-	logger.info('Generating index pages')
+	
+	logger.info("Rendering Common pages")
+	render_about_page(all_mods, all_grps)
+	
+	logger.info('Generating index pages')	
 	render_index_pages(all_mods, all_grps)
 
 	logger.info('DONE')
