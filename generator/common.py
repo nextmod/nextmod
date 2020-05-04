@@ -4,8 +4,8 @@
 import logging
 
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Callable, NamedTuple, List, Tuple
+from pathlib import Path, PurePath
+from typing import Callable, NamedTuple, List, Tuple, Optional
 
 from generator.source import Repository
 from generator.file_parsers import InfoFile
@@ -22,10 +22,31 @@ g_log.setLevel(logging.INFO)
 
 g_public_dir = Path('./public')
 
+class Picture(NamedTuple):
+	base_name: str
+	base_ext: str
+	type: str
+	number: str
+	variant: Optional[str]
+	description: Optional[str]
+	
+	def get_id(self):
+		if self.variant:
+			return f'{self.type}-{self.number}-{self.variant}'
+		else:
+			return f'{self.type}-{self.number}'
+	
+	def out_name(self, ext: str, suffix: str = None) -> str:
+		if suffix:
+			return f'{self.get_id()}_{suffix}.{ext}'
+		else:
+			return f'{self.get_id()}.{ext}'
+
+
 @dataclass
 class Mod:
 	repository: Repository
-	id: int = 0
+	id: str = ''
 	name: str = ''
 	link: str = ''
 	banner_picture: str = ''
@@ -64,11 +85,14 @@ class Group(NamedTuple):
 	entries: Tuple[GroupEntry]
 
 
+class PicSrc(NamedTuple):
+	path: PurePath
+	mime: str
+
 @dataclass
 class PreviewEntry:
 	id: str
 	next_id: str
 	prev_id: str
 	picture: str
-	thumb: str
-	thumb_pictures: List
+	thumb_pictures: Tuple[PicSrc]

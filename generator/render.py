@@ -52,7 +52,9 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 	render_dict['mkref'] = mkref
 	
 	def foo(*args):
-		res = current_relref + '/' + '/'.join(args)
+		asf = PurePath(*args)
+		
+		res = PurePath(current_relref) / asf
 		return res
 	
 	jinja_env.filters['relpath'] = foo
