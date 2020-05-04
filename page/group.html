@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+	{% import 'fragment/macros.html' as macro %}
 	<head>
 		{% include 'fragment/head.html' %}
 		<title>Nextmods - {{ group.spec.name }}</title>
@@ -16,6 +17,6 @@
 			</li>
 			{% endfor %}
 		</ul>
-		{% include 'fragment/footer.html' %}
+		{{ macro.footer() }}
 	</body>
 </html>

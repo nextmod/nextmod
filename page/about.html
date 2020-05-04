@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+	{% import 'fragment/macros.html' as macro %}
 	<head>
 		{% include 'fragment/head.html' %}
 		<title>Nextmods - About</title>
@@ -8,6 +9,6 @@
 	<body>
 	 	{% include 'fragment/header.html' %}
 		{{ about_html | safe }}
-		{% include 'fragment/footer.html' %}
+		{{ macro.footer() }}
 	</body>
 </html>

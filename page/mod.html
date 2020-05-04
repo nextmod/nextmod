@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
+	{% import 'fragment/macros.html' as macro %}
 	<head>
 		{% include 'fragment/head.html' %}
 		<title>Nextmods - {{ mod.info.name }}</title>
 		{{ include_css('_static/common.css', '_static/mod.css', '_static/mod-page.css') | safe }}
 	</head>
 	<body>
-		{% import 'fragment/macros.html' as macro %}
 		{% include 'fragment/header.html' %}
 		<div class="banner-container">
 			{{ macro.picture(mod.banner_picture, 'banner-image') }}
@@ -61,6 +61,6 @@
 		<main>
 			{{ mod.page_html | safe }}
 		</main>
-		{% include 'fragment/footer.html' %}
+		{{ macro.footer() }}
 	</body>
 </html>
