@@ -3,11 +3,12 @@
 
 import logging
 
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
+from typing import Callable, NamedTuple, List, Tuple
 
-from generator.source import *
-from generator.file_parsers import *
+from generator.source import Repository
+from generator.file_parsers import InfoFile, TagsFile
 
 
 logging.basicConfig(

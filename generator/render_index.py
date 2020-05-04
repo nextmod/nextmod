@@ -1,11 +1,11 @@
 # Copyright (c) 2020, Eli2
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from pathlib import PurePath
+from typing import Any, Callable, NamedTuple
 
-from typing import Any
-
-from .common import *
-from .render import *
+from .common import Mod
+from .render import render_main_page
 
 def render_index_pages(all_mods, all_grps):
 	

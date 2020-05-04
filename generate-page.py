@@ -7,10 +7,13 @@
 import argparse
 from collections import defaultdict
 
+from generator.common import *
 from generator.image_processor import ImageProcessor
+
 from generator.render_about import render_about_page
-from generator.render_mod import *
-from generator.render_index import *
+from generator.render_mod import render_mod_page
+from generator.render_index import render_index_pages
+
 from generator.source_directory import DirectorySource
 from generator.source_gitlab import GitlabSource
 

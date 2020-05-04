@@ -2,13 +2,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import io
+from pathlib import PurePath
 from PIL import Image
 
 import markdown
 from generator.markdown_flavour import NextmodMarkdown
 
-from .common import *
-from .render import *
+from .common import g_public_dir, logger, Mod, PreviewEntry
+from .render import render_main_page
 
 def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
 	out_mod_dir = g_public_dir / 'mw' / str(mod.id)
