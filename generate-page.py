@@ -8,6 +8,7 @@ import argparse
 from collections import defaultdict
 
 from generator.image_processor import ImageProcessor
+from generator.render_about import render_about_page
 from generator.render_mod import *
 from generator.render_index import *
 from generator.source_directory import DirectorySource
@@ -70,24 +71,6 @@ def build_groups(all_mods: Tuple[Mod]) -> Tuple[Group]:
 		groups.append(Group(spec=group_spec, entries=grp_entries))
 
 	return tuple(groups)
-
-
-def render_about_page(all_mods, all_grps):
-	
-	render_args = {
-		'mods': all_mods,
-		'groups': all_grps
-	}
-	
-	path = Path('./about.md')
-	with open(path, 'r') as file:
-		about_md = file.read()
-		about_html = markdown.markdown(about_md, extensions=[])
-
-	cpy = render_args.copy()
-	cpy['about_html'] = about_html
-	render_main_page(PurePath('about.html'), cpy)
-
 
 
 def generate_search_data(all_mods: Tuple[Mod]):
