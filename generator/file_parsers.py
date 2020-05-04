@@ -48,6 +48,10 @@ class Creator(NamedTuple):
 	id: str
 	name: str
 
+class Tag(NamedTuple):
+	id: str
+	name: str
+
 @dataclass
 class InfoFile(MarkdownFile):
 	name: str = ''
@@ -55,7 +59,7 @@ class InfoFile(MarkdownFile):
 	category: str = ''
 	category_id: str = ''
 	description: str = ''
-	tags: List[Tuple[str, str]] = field(default_factory=list)
+	tags: List[Tag] = field(default_factory=list)
 	release_date: str = ''
 	update_date: str = ''
 	version: str = ''
@@ -84,8 +88,9 @@ class InfoFile(MarkdownFile):
 			self.description = line
 			self._lastHeader = ''
 		elif self._lastHeader == 'Tags':
-			tag_id = create_id_from_name(line)
-			self.tags.append((tag_id, line))
+			tag_name = line
+			tag_id = create_id_from_name(tag_name)
+			self.tags.append(Tag(tag_id, tag_name))
 		elif self._lastHeader == 'Release date':
 			self.release_date = line
 			self._lastHeader = ''
