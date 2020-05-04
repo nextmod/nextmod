@@ -112,13 +112,22 @@ summary {
 	/* margin-bottom: 2em; */
 }
 
-/* ===================================== */
-/* ===================================== */
+/* ==================================== */
+/* Thumb bar                            */
+/* ==================================== */
 
 .preview-thumb-container {
 	display: flex;
 	overflow-x: scroll;
 }
+
+.preview-thumb-container picture > img {
+	height: 100%;
+}
+
+/* ==================================== */
+/* Preview                              */
+/* ==================================== */
 
 .preview-thumb-a {
 	flex-shrink: 0;

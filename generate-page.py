@@ -69,8 +69,9 @@ class Mod:
 	id: int = 0
 	name: str = ''
 	link: str = ''
-	image_banner: str = ''
+	banner_picture: str = ''
 	image_preview: str = ''
+	picture_preview: str = field(default_factory=list)
 	image_gallery: List = field(default_factory=list)
 	authors: str = ''
 	description: str = ''
@@ -108,8 +109,9 @@ class PreviewEntry:
 	id: str
 	next_id: str
 	prev_id: str
-	img: str
+	picture: str
 	thumb: str
+	thumb_pictures: List
 
 
 from datetime import datetime
@@ -196,7 +198,8 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 	def foo(*args):
 		res = current_relref + '/' + '/'.join(args)
 		return res
-
+	
+	jinja_env.filters['relpath'] = foo
 	render_dict['relpath'] = foo
 	
 	def include_css(*paths):
@@ -232,7 +235,7 @@ def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
 
 	# images
 
-	image_banner = None
+	banner_picture = None
 	image_previews = []
 
 	page_images_gen = mod.repository.list_dir(dir_path='images')
@@ -261,20 +264,33 @@ def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
 
 		if app_args.dev_skip_image_transcode:
 			transcode_image = False
-
+		
+		picture = []
 		if transcode_image:
-			with open(out_img_dir / image_output_file_name, 'wb') as f:
-				image.save(f, "WebP", quality=100) # lossless=True
+			img = image.convert('RGB')
+			name = image_id + '.jpg'
+			with open(out_img_dir / name, 'wb') as f:
+				img.save(f, 'JPEG')
+				picture.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
+			
+			name = image_id + '.webp'
+			with open(out_img_dir / name, 'wb') as f:
+				image.save(f, 'WebP', quality=100)
+				picture.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
+			
 		else:
+			name = input_file_name
 			with open(out_img_dir / image_output_file_name, 'wb') as f:
 				image.save(f)
-
-		img_url = 'images/{}'.format(image_output_file_name)
-
+				picture.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
+		
+		
 		if input_file_name.startswith('banner'):
-			image_banner = img_url
+			banner_picture = picture
 		elif input_file_name.startswith('preview'):
 			thumb_file_name = image_id + '_thumb.webp'
+			
+			thumb_pictures = []
 
 			if app_args.dev_skip_image_transcode:
 				pass
@@ -283,14 +299,31 @@ def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
 				thumb_size = (360, 360)
 				thumb.thumbnail(thumb_size, Image.ANTIALIAS)
 				try:
-					with open(out_img_dir / thumb_file_name, 'wb') as f:
-						thumb.save(f, "WebP")
+					img = thumb.convert('RGB')
+					name = image_id + '_thumb.jpg'
+					with open(out_img_dir / name, 'wb') as f:
+						img.save(f, 'JPEG')
+						thumb_pictures.append(('mw/' + mod.id + '/images/' + name, 'image/jpeg'))
+					
+					name = image_id + '_thumb.webp'
+					with open(out_img_dir / name, 'wb') as f:
+						thumb.save(f, 'WebP')
+						thumb_pictures.append(('mw/' + mod.id + '/images/' + name, 'image/webp'))
+						
 				except Exception as ex:
 					logger.warning("Failed to write: {}", image_id, ex)
 
 			thumb_url = 'images/{}'.format(thumb_file_name)
 
-			e = PreviewEntry(id=image_id, prev_id=None, next_id=None, img=img_url, thumb=thumb_url)
+			e = PreviewEntry(
+				id=image_id,
+				prev_id=None,
+				next_id=None,
+				picture=picture,
+				thumb=thumb_url,
+				thumb_pictures=thumb_pictures
+			)
+			
 			image_previews.append(e)
 
 	image_previews.sort(key=lambda x: x.id)
@@ -306,8 +339,10 @@ def render_mod_page(app_args, all_mods, all_grps, mod: Mod):
 			preview.prev_id = image_previews[i - 1].id
 			preview.next_id = image_previews[i + 1].id
 
-	mod.image_banner = image_banner
+	mod.banner_picture = banner_picture
 	mod.image_previews = image_previews
+	
+	mod.picture_preview = mod.image_previews[0].thumb_pictures
 	mod.image_preview = 'mw/' + mod.id + '/' + mod.image_previews[0].thumb
 
 	# page

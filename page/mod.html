@@ -6,9 +6,10 @@
 		{{ include_css('_static/common.css', '_static/mod.css', '_static/mod-page.css') | safe }}
 	</head>
 	<body>
+		{% import 'fragment/picture.html' as picture %}
 		{% include 'fragment/header.html' %}
 		<div class="banner-container">
-			<img class="banner-image" src="{{ mod.image_banner }}">
+			{{ picture.picture(mod.banner_picture, 'banner-image') }}
 			<div class="banner-overlay-left">
 				<div class="banner-mod-category">{{ mod.info.category }}</div>
 				<div class="banner-mod-name">{{ mod.info.name }}</div>
@@ -22,7 +23,7 @@
 		<div class="preview-thumb-container">
 			{% for preview in mod.image_previews %}
 				<a class="preview-thumb-a" href="#{{ preview.id }}">
-					<img class="preview-thumb-img" src="{{ preview.thumb }}">
+					{{ picture.picture(preview.thumb_pictures, 'preview-thumb-img') }}
 				</a>
 			{% endfor %}
 		</div>
@@ -30,10 +31,10 @@
 			{% for preview in mod.image_previews %}
 				<div class="preview-grid" id="{{ preview.id }}">
 					<div class="preview-image-back">
-						<img src="{{ preview.thumb }}">
+						{{ picture.picture(preview.thumb_pictures, 'preview-thumb-img') }}
 						<p>Loading ...</p>
 					</div>
-					<img class="preview-image-front" src="{{ preview.img }}" loading="lazy">
+					{{ picture.picture(preview.picture, 'preview-image-front', 'lazy') }}
 					<a href="#{{ preview.prev_id }}" class="light-btn btn-prev">
 						<div class="preview-btn-lbl preview-btn-lbl-prev">Prev</div>
 					</a>

@@ -1,0 +1,8 @@
+{% macro picture(picture, clazz='', loading='eager') -%}
+<picture class="{{ clazz }}">
+	{% for source in picture | reverse %}
+	<source srcset="{{ source[0] | relpath }}" type="{{ source[1] }}">
+	{% endfor %}
+	<img src="{{ picture[0][0] | relpath }}" loading="{{ loading }}">
+</picture>
+{%- endmacro %}
