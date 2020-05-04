@@ -10,8 +10,8 @@ from collections import defaultdict
 from generator.image_processor import ImageProcessor
 from generator.render_mod import *
 from generator.render_index import *
-from generator.source_directory import *
-from generator.source_gitlab import *
+from generator.source_directory import DirectorySource
+from generator.source_gitlab import GitlabSource
 
 
 image_processor = ImageProcessor()

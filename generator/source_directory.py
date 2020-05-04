@@ -1,11 +1,12 @@
 # Copyright (c) 2020, Eli2
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .source import *
 
 import os
 from pathlib import Path
-from typing import Tuple, NamedTuple
+from typing import Tuple
+
+from .source import ModDataFile, RepositorySource, Repository
 
 
 class DirectorySource(RepositorySource):

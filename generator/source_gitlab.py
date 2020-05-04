@@ -1,11 +1,11 @@
 # Copyright (c) 2020, Eli2
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .source import *
 
 import gitlab
 from gitlab import GitlabGetError
 
+from .source import ModDataFile, RepositorySource, Repository
 
 class GitlabSource(RepositorySource):
 	nextmods_gitlab_group_id = 7457398
@@ -22,7 +22,7 @@ class GitlabSource(RepositorySource):
 			yield p
 
 
-class GitlabProject:
+class GitlabProject(Repository):
 	id = ''
 	name = ''
 	p_project = None
