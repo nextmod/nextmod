@@ -142,12 +142,10 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 
 def build_groups(all_mods: Tuple[Mod]) -> Tuple[Group]:
 
-
-
 	group_specs = (
 		GroupSpec('category', 'Categories', 'Category', lambda m: [(m.info.category_id, m.info.category)]),
 		GroupSpec('tag', 'Tags', 'Tag', lambda m: m.tags.entries),
-		GroupSpec('creator', 'Creators', 'Creator', lambda m: [(m.info.creator_id, m.info.creator)]),
+		GroupSpec('creator', 'Creators', 'Creator', lambda m: m.info.creators),
 	)
 
 	groups = []
@@ -475,12 +473,13 @@ def generate_search_data(all_mods: Tuple[Mod]):
 	for mod in all_mods:
 		mods[mod.id] = {
 			'name': mod.info.name,
-			'creator': mod.info.creator,
+			'creators': mod.info.creators,
 			'description': mod.info.description,
 			'thumbnail': mod.image_preview
 		}
 		preprocess_words(mod.id, mod.info.name, 10)
-		preprocess_words(mod.id, mod.info.creator, 8)
+		for creator in mod.info.creators:
+			preprocess_words(mod.id, creator.name, 8)
 		preprocess_words(mod.id, mod.info.description, 3)
 
 	data = {'mods': mods, 'words': all_words}

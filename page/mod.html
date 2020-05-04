@@ -14,7 +14,7 @@
 				<div class="banner-mod-category">{{ mod.info.category }}</div>
 				<div class="banner-mod-name">{{ mod.info.name }}</div>
 				<div class="banner-mod-last-update"><span>Last Update:</span>{{ mod.info.update_date }}</div>
-				<div class="banner-mod-author"><span>Author:</span>{{ mod.info.creator }}</div>
+				<div class="banner-mod-author"><span>Author:</span>{{ mod.info.creators | join(", ", attribute='name') }}</div>
 			</div>
 			<div class="banner-overlay-right">
 					<div class="banner-install">Install</div>

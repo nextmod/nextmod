@@ -37,7 +37,7 @@
 				</a>
 				<p class="name">{{ mod.info.name }}</p>
 				<p class="category">{{ mod.info.category }}</p>
-				<p class="author"><span>Author:</span>{{ mod.info.creator }}</p>
+				<p class="author"><span>Author:</span>{{ mod.info.creators | join(", ", attribute='name') }}</p>
 				<p class="update_date"><span>Update date:</span>{{ mod.info.update_date }}</p>
 				<p class="release_date"><span>Release date:</span>{{ mod.info.release_date }}</p>
 				<p class="description">{{ mod.info.description }}</p>

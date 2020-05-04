@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from dataclasses import dataclass, field
-from typing import List, Tuple
+from typing import List, Tuple, NamedTuple
 import re
 
 
@@ -41,12 +41,15 @@ class MarkdownFile:
 	def read_text(self, line: str):
 		pass
 
+class Creator(NamedTuple):
+	id: str
+	name: str
 
 @dataclass
 class InfoFile(MarkdownFile):
 	name: str = ''
-	creator: str = ''
-	creator_id: str = ''
+	creators: List[Creator] = field(default_factory=list)
+	#creator_id: str = ''
 	category: str = ''
 	category_id: str = ''
 	description: str = ''
@@ -67,9 +70,10 @@ class InfoFile(MarkdownFile):
 			self.name = line
 			self._lastHeader = ''
 		elif self._lastHeader == 'Created by':
-			self.creator = line
-			self.creator_id = create_id_from_name(line)
-			self._lastHeader = ''
+			if line:
+				creator = line
+				creator_id = create_id_from_name(line)
+				self.creators.append(Creator(creator_id, creator))
 		elif self._lastHeader == 'Category':
 			self.category = line
 			self.category_id = create_id_from_name(self.category)
