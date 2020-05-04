@@ -48,7 +48,7 @@
 			{% endfor %}
 		</div>
 		<ul class="tags-container">
-			{% for tag in mod.tags.entries %}
+			{% for tag in mod.info.tags %}
 				<li><a href="{{ relpath('tag', tag[0]+'.html') }}">{{ tag[1] }}</a></li>
 			{% endfor %}
 		</ul>

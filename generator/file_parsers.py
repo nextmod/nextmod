@@ -25,6 +25,9 @@ class MarkdownFile:
 			return
 		lines = content.decode('utf-8')
 		for line in lines.splitlines():
+			if not line:
+				continue
+			
 			if line.startswith('# '):
 				self.read_h1(line[2:])
 			elif line.startswith('* '):
@@ -49,10 +52,10 @@ class Creator(NamedTuple):
 class InfoFile(MarkdownFile):
 	name: str = ''
 	creators: List[Creator] = field(default_factory=list)
-	#creator_id: str = ''
 	category: str = ''
 	category_id: str = ''
 	description: str = ''
+	tags: List[Tuple[str, str]] = field(default_factory=list)
 	release_date: str = ''
 	update_date: str = ''
 	version: str = ''
@@ -70,10 +73,9 @@ class InfoFile(MarkdownFile):
 			self.name = line
 			self._lastHeader = ''
 		elif self._lastHeader == 'Created by':
-			if line:
-				creator = line
-				creator_id = create_id_from_name(line)
-				self.creators.append(Creator(creator_id, creator))
+			creator = line
+			creator_id = create_id_from_name(line)
+			self.creators.append(Creator(creator_id, creator))
 		elif self._lastHeader == 'Category':
 			self.category = line
 			self.category_id = create_id_from_name(self.category)
@@ -81,6 +83,9 @@ class InfoFile(MarkdownFile):
 		elif self._lastHeader == 'Description':
 			self.description = line
 			self._lastHeader = ''
+		elif self._lastHeader == 'Tags':
+			tag_id = create_id_from_name(line)
+			self.tags.append((tag_id, line))
 		elif self._lastHeader == 'Release date':
 			self.release_date = line
 			self._lastHeader = ''
@@ -90,15 +95,3 @@ class InfoFile(MarkdownFile):
 		elif self._lastHeader == 'Version':
 			self.version = line
 			self._lastHeader = ''
-
-
-@dataclass
-class TagsFile(MarkdownFile):
-	entries: List[Tuple[str, str]] = field(default_factory=list)
-
-	def read_li(self, line: str):
-		self.read_text(line)
-
-	def read_text(self, line: str):
-		tag_id = create_id_from_name(line)
-		self.entries.append((tag_id, line))

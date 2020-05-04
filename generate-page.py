@@ -37,7 +37,6 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 		mod.data_files_size = sum(size for name, size in mod.data_files)
 		
 		mod.info.parse(mod_repository.get_file('mod-info.md'))
-		mod.tags.parse(mod_repository.get_file('tags.md'))
 
 		mods.append(mod)
 	return tuple(mods)
@@ -47,7 +46,7 @@ def build_groups(all_mods: Tuple[Mod]) -> Tuple[Group]:
 
 	group_specs = (
 		GroupSpec('category', 'Categories', 'Category', lambda m: [(m.info.category_id, m.info.category)]),
-		GroupSpec('tag', 'Tags', 'Tag', lambda m: m.tags.entries),
+		GroupSpec('tag', 'Tags', 'Tag', lambda m: m.info.tags),
 		GroupSpec('creator', 'Creators', 'Creator', lambda m: m.info.creators),
 	)
 

@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Callable, NamedTuple, List, Tuple
 
 from generator.source import Repository
-from generator.file_parsers import InfoFile, TagsFile
+from generator.file_parsers import InfoFile
 
 
 logging.basicConfig(
@@ -38,7 +38,6 @@ class Mod:
 	star_count: int = 0
 	
 	info: InfoFile = field(default_factory=InfoFile)
-	tags: TagsFile = field(default_factory=TagsFile)
 	
 	info_html: str = ''
 	page_html: str = ''
