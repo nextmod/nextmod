@@ -58,7 +58,7 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 	
 	render_dict['mkref'] = mkref
 	
-	def foo(*args):
+	def makepath(*args):
 		if len(args) == 1 and isinstance(args[0], tuple):
 			asf = PurePath(*args[0])
 		else:
@@ -67,7 +67,7 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 		res = PurePath(current_relref) / asf
 		return res
 	
-	jinja_env.filters['relpath'] = foo
+	jinja_env.filters['makepath'] = makepath
 	
 	template = jinja_env.get_template(str(page_name))
 	rendered = template.render(render_dict)

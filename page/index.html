@@ -18,10 +18,10 @@
 		<ul class="sort-by">
 			{% for sort_link in sort_links %}
 			<li>
-				<a href="{{ sort_link.asc_url | relpath }}">
+				<a href="{{ sort_link.asc_url | makepath }}">
 					<span class="name">{{ sort_link.name }}</span><span class="icon">↧</span>
 				</a>
-				<a href="{{ sort_link.dsc_url | relpath }}">
+				<a href="{{ sort_link.dsc_url | makepath }}">
 					<span class="icon">↥</span>
 				</a>
 			</li>
@@ -30,7 +30,7 @@
 		<ul class="mod-list">
 		{% for mod in mods %}
 			<li class="mod-tile">
-				<a href="{{ mod.link | relpath }}">
+				<a href="{{ mod.link | makepath }}">
 					{{ macro.picture(mod.picture_preview) | ind(5) }}
 				</a>
 				<p class="name">{{ mod.info.name }}</p>

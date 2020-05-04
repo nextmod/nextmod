@@ -1,28 +1,28 @@
 {% macro head() %}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="{{ '_static/favicon.png' | relpath }}" type="image/png">
+<link rel="icon" href="{{ '_static/favicon.png' | makepath }}" type="image/png">
 {%- endmacro %}
 
 
 {% macro style(paths) %}
 {% for path in paths %}
-<link rel="stylesheet" href="{{ path | relpath }}">
+<link rel="stylesheet" href="{{ path | makepath }}">
 {% endfor -%}
 {%- endmacro %}
 
 
 {% macro header(groups) %}
 <header>
-	<a href="{{ 'index.html' | relpath }}">Nextmods</a>
+	<a href="{{ 'index.html' | makepath }}">Nextmods</a>
 	<div class='spacer'></div>
 	{% for group in groups %}
-	<a href="{{ (group.spec.id, 'index.html') | relpath }}">{{group.spec.name}}</a>
+	<a href="{{ (group.spec.id, 'index.html') | makepath }}">{{group.spec.name}}</a>
 	{% endfor %}
 	<div class="expander"></div>
-	<a href="{{ 'about.html' | relpath }}">About</a>
+	<a href="{{ 'about.html' | makepath }}">About</a>
 	<input id='search-box' type="text" placeholder="Sorry, search needs JS" disabled>
-	<script id='search-script' src="{{ '_static/search.js' | relpath }}"></script>
+	<script id='search-script' src="{{ '_static/search.js' | makepath }}"></script>
 </header>
 {%- endmacro %}
 
@@ -30,9 +30,9 @@
 {% macro picture(picture, clazz='', loading='eager') %}
 <picture class="{{ clazz }}">
 	{% for source in picture | reverse %}
-	<source srcset="{{ source[0] | relpath }}" type="{{ source[1] }}">
+	<source srcset="{{ source[0] | makepath }}" type="{{ source[1] }}">
 	{% endfor %}
-	<img src="{{ picture[0][0] | relpath }}" loading="{{ loading }}">
+	<img src="{{ picture[0][0] | makepath }}" loading="{{ loading }}">
 </picture>
 {%- endmacro %}
 
