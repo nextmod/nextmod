@@ -37,7 +37,7 @@ def render_index_pages(all_mods, all_grps):
 		SortOrder('-dsc', True)
 	)
 	
-	def render_mod_index(base_name, mods):
+	def render_mod_index(base_path, base_name, mods):
 		
 		class SortLink(NamedTuple):
 			name: str
@@ -48,8 +48,8 @@ def render_index_pages(all_mods, all_grps):
 		for sort_by in sort_bys:
 			sort_links.append(SortLink(
 				name=sort_by.name,
-				asc_url=base_name + sort_by.id + '.html',
-				dsc_url=base_name + sort_by.id + '-dsc.html'
+				asc_url=base_path / (base_name + sort_by.id + '.html'),
+				dsc_url=base_path / (base_name + sort_by.id + '-dsc.html')
 			))
 		render_args['sort_links'] = sort_links
 		
@@ -57,7 +57,8 @@ def render_index_pages(all_mods, all_grps):
 			render_args['sort_by'] = sort_by
 			for sort_order in sort_orders:
 				render_args['sort_order'] = sort_order
-				file_name = PurePath(base_name + sort_by.id + sort_order.id + '.html')
+				
+				file_name = base_path / (base_name + sort_by.id + sort_order.id + '.html')
 				
 				reverse = sort_by.reverse
 				if sort_order.reverse:
@@ -70,11 +71,11 @@ def render_index_pages(all_mods, all_grps):
 				render_args['base_name'] = base_name
 				render_main_page(PurePath('index.html'), render_args, file_name)
 	
-	render_mod_index('index', all_mods)
+	render_mod_index(PurePath(), 'index', all_mods)
 	
 	for group in all_grps:
 		render_args['group'] = group
 		render_main_page(PurePath('group.html'), render_args, PurePath(group.spec.id, 'index.html'))
 		for entry in group.entries:
 			render_args['group_entry'] = entry
-			render_mod_index(group.spec.id + '/' + entry.id, entry.mods)
+			render_mod_index(PurePath(group.spec.id, entry.id), 'index', entry.mods)

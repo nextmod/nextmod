@@ -12,7 +12,7 @@
 		<ul class="group-index-list">
 			{% for entry in group.entries %}
 			<li>
-				<a href="{{ (group.spec.id, entry.id + '.html') | makepath }}">{{ entry.name }}</a>
+				<a href="{{ (group.spec.id, entry.id) | makepath }}">{{ entry.name }}</a>
 				<span>{{ entry.mods | length }}</span>
 			</li>
 			{% endfor %}
