@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	{% import 'fragment/picture.html' as picture %}
+	{% import 'fragment/macros.html' as macro %}
 	<head>
 		{% include 'fragment/head.html' %}
 		{% if not group %}
@@ -31,7 +31,7 @@
 		{% for mod in mods %}
 			<li class="mod-tile">
 				<a href="{{ relpath(mod.link) }}">
-					{{ picture.picture(mod.picture_preview) }}
+					{{ macro.picture(mod.picture_preview) }}
 					
 					<!--<img class="mod-list-image" src="{{ relpath(mod.image_preview) }}">-->
 				</a>
