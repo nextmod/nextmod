@@ -56,4 +56,4 @@ class DirectoryProject(Repository):
 			return file.read()
 	
 	def get_star_count(self):
-		return -1;
+		return -1
