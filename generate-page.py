@@ -6,9 +6,12 @@
 
 import argparse
 from collections import defaultdict
+
 from generator.image_processor import ImageProcessor
 from generator.render_mod import *
 from generator.render_index import *
+from generator.source_directory import *
+from generator.source_gitlab import *
 
 
 image_processor = ImageProcessor()
