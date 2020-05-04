@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	{% import 'fragment/macros.html' as macro %}
+	{% import 'fragment/macros.html' as macro with context %}
 	<head>
 		{{ macro.head() | ind(2) }}
 		<title>Nextmods - {{ group.spec.name }}</title>

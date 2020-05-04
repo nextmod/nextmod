@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-	{% import 'fragment/macros.html' as macro %}
+	{% import 'fragment/macros.html' as macro with context %}
 	<head>
 		{{ macro.head() | ind(2) }}
 		<title>Nextmods - About</title>
-		{{ macro.style(('_static/common.css')) | ind(2) }}
+		{{ macro.style(['_static/common.css']) | ind(2) }}
 	</head>
 	<body>
 	 	{{ macro.header(groups) | ind(2) }}

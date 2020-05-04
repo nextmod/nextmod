@@ -6,9 +6,11 @@ import os
 from datetime import datetime
 from pathlib import PurePath
 
+from markupsafe import Markup
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import contextfilter
 
-from generator.common import g_public_dir
+from generator.common import g_log, g_public_dir
 
 
 jinja_env = Environment(
@@ -26,10 +28,7 @@ def human_bytes(size):
 		if size < 1024.0:
 			return "%3.2f%s" % (size, x)
 		size /= 1024.0
-		
-jinja_env.filters['human_bytes'] = human_bytes
 
-from markupsafe import Markup
 
 def html_indent(s, depth):
 	newline = Markup("\n")
@@ -37,7 +36,32 @@ def html_indent(s, depth):
 	rv = (newline + Markup("\t" * depth)).join(s.splitlines())
 	return rv
 
+
+@contextfilter
+def makepath(ctx, *args):
+	current_path = ctx.environment.globals['g_BAR']
+
+	if len(args) == 1 and isinstance(args[0], tuple):
+		target = PurePath(*args[0])
+	else:
+		target = PurePath(*args)
+
+	current_depth = len(current_path.parent.parts)
+	
+	i = 0
+	for a, b in zip(current_path.parent.parts, target.parent.parts):
+		if a != b:
+			break;
+		i += 1
+	
+	walk_up = ['.'] + ['..'] * (current_depth - i)
+	rel_path = PurePath(*walk_up) / PurePath(*target.parts[i:])
+	# g_log.info(f'src: {current_path} dst {target} -> rel {rel_path}')
+	return rel_path
+
+jinja_env.filters['human_bytes'] = human_bytes
 jinja_env.filters['ind'] = html_indent
+jinja_env.filters['makepath'] = makepath
 
 
 def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: PurePath = None):
@@ -45,29 +69,7 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 	if not out_page_name:
 		out_page_name = page_name
 	
-	depth = len(out_page_name.parts) - 1
-	if depth == 0:
-		current_relref = '.'
-	else:
-		current_relref = '/'.join(['..'] * depth)
-	
-	def mkref(base, name, suffix):
-		foo = [base, name, suffix]
-		res = current_relref + '/' + '/'.join(foo)
-		return res
-	
-	render_dict['mkref'] = mkref
-	
-	def makepath(*args):
-		if len(args) == 1 and isinstance(args[0], tuple):
-			asf = PurePath(*args[0])
-		else:
-			asf = PurePath(*args)
-		
-		res = PurePath(current_relref) / asf
-		return res
-	
-	jinja_env.filters['makepath'] = makepath
+	jinja_env.globals['g_BAR'] = out_page_name
 	
 	template = jinja_env.get_template(str(page_name))
 	rendered = template.render(render_dict)
