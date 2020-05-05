@@ -1,6 +1,5 @@
-# Nextmods
-
-Nextmods is a static site generator for rendering a mod index.
+# Nextmod
+Nextmod is a Static Site Generator for Mod Indexes.
 
 ## Design
 
