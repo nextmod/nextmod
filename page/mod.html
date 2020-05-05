@@ -11,7 +11,7 @@
 		<div class="banner-container">
 			{{ macro.picture(mod.banner_picture, 'banner-image') | ind(3) }}
 			<div class="banner-overlay-left">
-				<div class="banner-mod-category">{{ mod.info.category }}</div>
+				<div class="banner-mod-category">{{ mod.info.category.name }}</div>
 				<div class="banner-mod-name">{{ mod.info.name }}</div>
 				<div class="banner-mod-last-update"><span>Last Update:</span>{{ mod.info.update_date }}</div>
 				<div class="banner-mod-author"><span>Author:</span>{{ mod.info.creators | join(", ", attribute='name') }}</div>

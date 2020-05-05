@@ -3,10 +3,10 @@
 	{% import 'fragment/macros.html' as macro with context %}
 	<head>
 		{{ macro.head() | ind(2) }}
-		{% if not group %}
-		<title>Nextmods</title>
+		{% if group %}
+		<title>Nextmods - {{ group.spec.name_singular }} - {{ group_entry.name }}</title>
 		{% else %}
-		<title>Nextmods - {{ group.name }}</title>
+		<title>Nextmods</title>
 		{% endif %}
 		{{ macro.style(('_static/common.css', '_static/index.css')) | ind(2) }}
 	</head>
@@ -37,7 +37,7 @@
 					<dt class="name">Name</dt>
 					<dd><a href="{{ mod.link | makepath }}">{{ mod.info.name }}</a></dd>
 					<dt class="category">Category</dt>
-					<dd><a href="{{ ('category', mod.info.category.id, 'index.html') | makepath }}">{{ mod.info.category }}</a></dd>
+					<dd><a href="{{ ('category', mod.info.category.id, 'index.html') | makepath }}">{{ mod.info.category.name }}</a></dd>
 					<dt class="creators">Creator</dt>
 					{% for creator in mod.info.creators %}
 					<dd><a href="{{ ('creator', creator.id, 'index.html') | makepath }}">{{ creator.name }}</a></dd>
