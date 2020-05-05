@@ -47,7 +47,7 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 def build_groups(all_mods: Tuple[Mod]) -> Tuple[Group]:
 
 	group_specs = (
-		GroupSpec('category', 'Categories', 'Category', lambda m: [(m.info.category_id, m.info.category)]),
+		GroupSpec('category', 'Categories', 'Category', lambda m: [m.info.category]),
 		GroupSpec('tag', 'Tags', 'Tag', lambda m: m.info.tags),
 		GroupSpec('creator', 'Creators', 'Creator', lambda m: m.info.creators),
 	)

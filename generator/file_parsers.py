@@ -44,7 +44,8 @@ class MarkdownFile:
 	def read_text(self, line: str):
 		pass
 
-class Creator(NamedTuple):
+
+class Category(NamedTuple):
 	id: str
 	name: str
 
@@ -52,12 +53,16 @@ class Tag(NamedTuple):
 	id: str
 	name: str
 
+class Creator(NamedTuple):
+	id: str
+	name: str
+
+
 @dataclass
 class InfoFile(MarkdownFile):
 	name: str = ''
 	creators: List[Creator] = field(default_factory=list)
-	category: str = ''
-	category_id: str = ''
+	category: Category = None
 	description: str = ''
 	tags: List[Tag] = field(default_factory=list)
 	release_date: str = ''
@@ -77,12 +82,13 @@ class InfoFile(MarkdownFile):
 			self.name = line
 			self._lastHeader = ''
 		elif self._lastHeader == 'Created by':
-			creator = line
+			creator_name = line
 			creator_id = create_id_from_name(line)
-			self.creators.append(Creator(creator_id, creator))
+			self.creators.append(Creator(creator_id, creator_name))
 		elif self._lastHeader == 'Category':
-			self.category = line
-			self.category_id = create_id_from_name(self.category)
+			category_name = line
+			category_id = create_id_from_name(category_name)
+			self.category = Category(category_id, category_name)
 			self._lastHeader = ''
 		elif self._lastHeader == 'Description':
 			self.description = line

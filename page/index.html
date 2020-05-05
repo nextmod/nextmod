@@ -37,7 +37,7 @@
 					<dt class="name">Name</dt>
 					<dd><a href="{{ mod.link | makepath }}">{{ mod.info.name }}</a></dd>
 					<dt class="category">Category</dt>
-					<dd><a href="{{ ('category', mod.info.category_id, 'index.html') | makepath }}">{{ mod.info.category }}</a></dd>
+					<dd><a href="{{ ('category', mod.info.category.id, 'index.html') | makepath }}">{{ mod.info.category }}</a></dd>
 					<dt class="creators">Creator</dt>
 					{% for creator in mod.info.creators %}
 					<dd><a href="{{ ('creator', creator.id, 'index.html') | makepath }}">{{ creator.name }}</a></dd>
