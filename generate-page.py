@@ -8,6 +8,7 @@ import argparse
 from collections import defaultdict
 
 from generator.common import *
+from generator.file_parsers import InfoFileParser
 from generator.image_processor import ImageProcessor
 
 from generator.render_about import render_about_page
@@ -38,7 +39,9 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 		mod.data_files = mod_repository.list_data_files()
 		mod.data_files_size = sum(size for name, size in mod.data_files)
 		
-		mod.info.parse(mod_repository.get_file('mod-info.md'))
+		info_parser = InfoFileParser()
+		info_parser.parse(mod_repository.get_file('mod-info.md'))
+		mod.info = info_parser
 
 		mods.append(mod)
 	return tuple(mods)

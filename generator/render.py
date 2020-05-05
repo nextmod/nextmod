@@ -10,6 +10,7 @@ from markupsafe import Markup
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jinja2 import contextfilter
 
+from .common import Category, Tag, Creator
 from generator.target import g_target
 
 
@@ -38,13 +39,19 @@ def html_indent(s, depth):
 
 
 @contextfilter
-def makepath(ctx, *args):
+def makepath(ctx, args):
 	current_path = ctx.environment.globals['g_BAR']
-
-	if len(args) == 1 and isinstance(args[0], tuple):
-		target = PurePath(*args[0])
-	else:
+	
+	if isinstance(args, Category):
+		target = PurePath('category', args.id, 'index.html')
+	elif isinstance(args, tuple):
 		target = PurePath(*args)
+	elif isinstance(args, str):
+		target = PurePath(args)
+	elif isinstance(args, PurePath):
+		target = args
+	else:
+		raise Exception(f'Unexpected type for makepath {type(args)}')
 
 	current_depth = len(current_path.parent.parts)
 	

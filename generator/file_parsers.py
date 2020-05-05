@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import List, Tuple, NamedTuple
 import re
 
+from generator.common import InfoFile, Creator, Category, Tag
 
 def create_id_from_name(name):
 	name = name\
@@ -45,29 +46,8 @@ class MarkdownFile:
 		pass
 
 
-class Category(NamedTuple):
-	id: str
-	name: str
-
-class Tag(NamedTuple):
-	id: str
-	name: str
-
-class Creator(NamedTuple):
-	id: str
-	name: str
-
-
 @dataclass
-class InfoFile(MarkdownFile):
-	name: str = ''
-	creators: List[Creator] = field(default_factory=list)
-	category: Category = None
-	description: str = ''
-	tags: List[Tag] = field(default_factory=list)
-	release_date: str = ''
-	update_date: str = ''
-	version: str = ''
+class InfoFileParser(InfoFile, MarkdownFile):
 
 	_lastHeader: str = ''
 

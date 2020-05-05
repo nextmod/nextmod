@@ -8,7 +8,6 @@ from pathlib import Path, PurePath
 from typing import Callable, NamedTuple, List, Tuple, Optional
 
 from generator.source import Repository
-from generator.file_parsers import InfoFile
 
 
 logging.basicConfig(
@@ -41,6 +40,29 @@ class Picture(NamedTuple):
 		else:
 			return f'{self.get_id()}.{ext}'
 
+
+class Category(NamedTuple):
+	id: str
+	name: str
+
+class Tag(NamedTuple):
+	id: str
+	name: str
+
+class Creator(NamedTuple):
+	id: str
+	name: str
+
+@dataclass
+class InfoFile:
+	name: str = ''
+	creators: List[Creator] = field(default_factory=list)
+	category: Category = None
+	description: str = ''
+	tags: List[Tag] = field(default_factory=list)
+	release_date: str = ''
+	update_date: str = ''
+	version: str = ''
 
 @dataclass
 class Mod:
