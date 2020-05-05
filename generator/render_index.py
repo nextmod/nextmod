@@ -40,6 +40,7 @@ def render_index_pages(all_mods, all_grps):
 	def render_mod_index(base_path, base_name, mods):
 		
 		class SortLink(NamedTuple):
+			id: str
 			name: str
 			asc_url: str
 			dsc_url: str
@@ -47,6 +48,7 @@ def render_index_pages(all_mods, all_grps):
 		sort_links = []
 		for sort_by in sort_bys:
 			sort_links.append(SortLink(
+				id=sort_by.id,
 				name=sort_by.name,
 				asc_url=base_path / (base_name + sort_by.id + '.html'),
 				dsc_url=base_path / (base_name + sort_by.id + '-dsc.html')
