@@ -15,7 +15,7 @@ from .render import render_main_page
 from .target import g_target
 
 
-def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
+def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
 	mod_directory = PurePath('mw') / mod.id	
 	image_directory = mod_directory / 'image'
@@ -198,10 +198,10 @@ def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
 	mod.picture_preview = mod.image_previews[0].thumb_pictures
 	
-	render_mod_page_main(all_mods, all_grps, mod)
+	render_mod_page_main(config, all_mods, all_grps, mod)
 
 
-def render_mod_page_main(all_mods, all_grps, mod: Mod):
+def render_mod_page_main(config, all_mods, all_grps, mod: Mod):
 	
 	mod_directory = PurePath('mw') / mod.id	
 	
@@ -229,6 +229,7 @@ def render_mod_page_main(all_mods, all_grps, mod: Mod):
 			out_path = mod_directory / 'index.html'
 			
 			render_args = {
+				'config': config,
 				'mods': all_mods,
 				'groups': all_grps,
 				'mod': mod

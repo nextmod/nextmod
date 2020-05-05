@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from dataclasses import dataclass, field
-from typing import List, Tuple, NamedTuple
+from typing import Any, List, Tuple, NamedTuple
 import re
 
-from generator.common import InfoFile, Creator, Category, Tag
+from generator.common import ConfigData, InfoFile, Creator, Category, Tag
 
 def create_id_from_name(name):
 	name = name\
@@ -44,6 +44,31 @@ class MarkdownFile:
 
 	def read_text(self, line: str):
 		pass
+	
+	def get_result(self) -> Any:
+		pass
+
+
+
+@dataclass
+class ConfigFile(MarkdownFile):
+	_lastHeader: str = ''
+	
+	instance_name: str = ''
+
+	def read_h1(self, line):
+		self._lastHeader = line
+
+	def read_li(self, line):
+		self.read_text(line)
+
+	def read_text(self, line):
+		if self._lastHeader == 'Instance Name':
+			self.instance_name = line
+			self._lastHeader = ''
+			
+	def get_result(self) -> Any:
+		return ConfigData(self.instance_name)
 
 
 @dataclass

@@ -7,8 +7,9 @@ from markdown import markdown
 from .render import render_main_page
 
 
-def render_about_page(all_mods, all_grps):
+def render_about_page(config, all_mods, all_grps):
 	render_args = {
+		'config': config,
 		'mods': all_mods,
 		'groups': all_grps
 	}

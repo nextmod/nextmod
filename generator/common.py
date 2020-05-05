@@ -19,6 +19,9 @@ logging.basicConfig(
 g_log = logging.getLogger()
 g_log.setLevel(logging.INFO)
 
+class ConfigData(NamedTuple):
+	instance_name: str = ''
+
 
 class Picture(NamedTuple):
 	base_name: str

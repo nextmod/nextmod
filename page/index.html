@@ -4,9 +4,9 @@
 	<head>
 		{{ macro.head() | ind(2) }}
 		{% if group %}
-		<title>Nextmods - {{ group.spec.name_singular }} - {{ group_entry.name }}</title>
+		<title>{{ config.instance_name }} - {{ group.spec.name_singular }} - {{ group_entry.name }}</title>
 		{% else %}
-		<title>Nextmods</title>
+		<title>{{ config.instance_name }}</title>
 		{% endif %}
 		{{ macro.style(('_static/common.css', '_static/index.css')) | ind(2) }}
 	</head>

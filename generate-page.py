@@ -8,7 +8,7 @@ import argparse
 from collections import defaultdict
 
 from generator.common import *
-from generator.file_parsers import InfoFileParser
+from generator.file_parsers import ConfigFile, InfoFileParser
 from generator.image_processor import ImageProcessor
 
 from generator.render_about import render_about_page
@@ -115,6 +115,13 @@ def main():
 	parser.add_argument('--dev-skip-image-transcode', action='store_true')
 
 	app_args = parser.parse_args()
+	
+	cfg_file = ConfigFile()
+	with open('./nextmod-config.md', 'rb') as file:
+		cfg_file.parse(file.read())
+	
+	config = cfg_file.get_result()
+	
 
 	if app_args.source == 'local':
 		source = DirectorySource()
@@ -127,7 +134,7 @@ def main():
 	for mod in all_mods:
 		g_log.info('Generating mod page for: {}'.format(mod.repository.id))
 		try:
-			render_mod_page(app_args, all_mods, all_grps, mod)
+			render_mod_page(config, app_args, all_mods, all_grps, mod)
 		except Exception as ex:
 			g_log.exception(ex)
 
@@ -135,10 +142,10 @@ def main():
 	generate_search_data(all_mods)
 	
 	g_log.info("Rendering Common pages")
-	render_about_page(all_mods, all_grps)
+	render_about_page(config, all_mods, all_grps)
 	
 	g_log.info('Generating index pages')
-	render_index_pages(all_mods, all_grps)
+	render_index_pages(config, all_mods, all_grps)
 
 	g_log.info('DONE')
 

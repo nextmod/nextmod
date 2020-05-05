@@ -1,3 +1,6 @@
+# Instance Name
+Nextmod
+
 # Category Whitelist
 * Animations
 * Armour

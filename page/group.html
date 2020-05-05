@@ -3,7 +3,7 @@
 	{% import 'fragment/macros.html' as macro with context %}
 	<head>
 		{{ macro.head() | ind(2) }}
-		<title>Nextmods - {{ group.spec.name }}</title>
+		<title>{{ config.instance_name }} - {{ group.spec.name }}</title>
 		{{ macro.style(('_static/common.css', '_static/group.css')) | ind(2) }}
 	</head>
 	<body>

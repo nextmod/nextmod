@@ -7,9 +7,10 @@ from typing import Any, Callable, NamedTuple
 from .common import Mod
 from .render import render_main_page
 
-def render_index_pages(all_mods, all_grps):
+def render_index_pages(config, all_mods, all_grps):
 	
 	render_args = {
+		'config': config,
 		'mods': all_mods,
 		'groups': all_grps
 	}
