@@ -10,10 +10,10 @@
 		{{ macro.header(groups) | ind(2) }}
 		<h2>{{ group.spec.name }}</h2>
 		<ul class="group-index-list">
-			{% for entry in group.entries %}
+			{% for ref in group.get_refs() %}
 			<li>
-				<a href="{{ (group.spec.id, entry.id, 'index.html') | makepath }}">{{ entry.name }}</a>
-				<span>{{ entry.mods | length }}</span>
+				<a href="{{ ref | makepath }}">{{ ref.entry.name }}</a>
+				<span>{{ ref.entry.mods | length }}</span>
 			</li>
 			{% endfor %}
 		</ul>

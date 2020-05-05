@@ -38,7 +38,7 @@
 					<dd><a href="{{ mod.info.category | makepath }}">{{ mod.info.category.name }}</a></dd>
 					<dt class="creators">Creator</dt>
 					{% for creator in mod.info.creators %}
-					<dd><a href="{{ ('creator', creator.id, 'index.html') | makepath }}">{{ creator.name }}</a></dd>
+					<dd><a href="{{ creator | makepath }}">{{ creator.name }}</a></dd>
 					{% endfor %}
 					<dt class="release-date">Release</dt>
 					<dd>{{ mod.info.release_date }}</dd>

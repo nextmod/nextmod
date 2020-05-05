@@ -10,7 +10,7 @@ from markupsafe import Markup
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jinja2 import contextfilter
 
-from .common import Category, Tag, Creator
+from .common import Category, Tag, Creator, GroupSpec, GroupEntryRef
 from generator.target import g_target
 
 
@@ -39,19 +39,25 @@ def html_indent(s, depth):
 
 
 @contextfilter
-def makepath(ctx, args):
+def makepath(ctx, pointer):
 	current_path = ctx.environment.globals['g_BAR']
 	
-	if isinstance(args, Category):
-		target = PurePath('category', args.id, 'index.html')
-	elif isinstance(args, tuple):
-		target = PurePath(*args)
-	elif isinstance(args, str):
-		target = PurePath(args)
-	elif isinstance(args, PurePath):
-		target = args
+	if isinstance(pointer, Category):
+		target = PurePath('category', pointer.id, 'index.html')
+	elif isinstance(pointer, Tag):
+		target = PurePath('tag', pointer.id, 'index.html')
+	elif isinstance(pointer, Creator):
+		target = PurePath('creator', pointer.id, 'index.html')
+	elif isinstance(pointer, GroupSpec):
+		target = PurePath(pointer.id, 'index.html')
+	elif isinstance(pointer, GroupEntryRef):
+		target = PurePath(pointer.spec.id, pointer.entry.id, 'index.html')
+	elif isinstance(pointer, str):
+		target = PurePath(pointer)
+	elif isinstance(pointer, PurePath):
+		target = pointer
 	else:
-		raise Exception(f'Unexpected type for makepath {type(args)}')
+		raise Exception(f'Unexpected type for makepath {type(pointer)}')
 
 	current_depth = len(current_path.parent.parts)
 	
@@ -67,6 +73,7 @@ def makepath(ctx, args):
 	rel_path = PurePath(*walk_up) / PurePath(*target.parts[i:])
 	# g_log.info(f'src: {current_path} dst {target} -> rel {rel_path}')
 	return rel_path
+
 
 jinja_env.filters['human_bytes'] = human_bytes
 jinja_env.filters['ind'] = html_indent

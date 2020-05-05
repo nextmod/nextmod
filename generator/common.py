@@ -100,10 +100,17 @@ class GroupEntry(NamedTuple):
 	name: str
 	mods: Tuple[Mod]
 
+class GroupEntryRef(NamedTuple):
+	spec: GroupSpec
+	entry: GroupEntry
 
 class Group(NamedTuple):
 	spec: GroupSpec
 	entries: Tuple[GroupEntry]
+	
+	def get_refs(self):
+		for e in self.entries:
+			yield GroupEntryRef(self.spec, e)
 
 
 class PicSrc(NamedTuple):
