@@ -4,11 +4,21 @@
 	<head>
 		{{ macro.head() | ind(2) }}
 		<title>Nextmods - About</title>
-		{{ macro.style(['_static/common.css']) | ind(2) }}
+		{{ macro.style(('_static/common.css', '_static/about.css')) | ind(2) }}
 	</head>
 	<body>
 	 	{{ macro.header(groups) | ind(2) }}
+	    <main>
+        <details class="license">
+		    <summary>License: GNU Affero General Public License Version 3 or later</summary>
+	        <div>
+		    {{ license_html | safe | ind(3) }}
+	        </div>
+	    </details>
+	    <div class="about">
 		{{ about_html | safe | ind(2) }}
+	    </div>
+	    </main>
 		{{ macro.footer() | ind(2) }}
 	</body>
 </html>

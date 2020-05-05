@@ -13,11 +13,16 @@ def render_about_page(all_mods, all_grps):
 		'groups': all_grps
 	}
 	
-	path = Path('./about.md')
-	with open(path, 'r') as file:
+	with open('./about.md', encoding='utf-8') as file:
 		about_md = file.read()
-		about_html = markdown(about_md, extensions=[])
+		
+	with open('./LICENSE/agpl-3.0.md', encoding='utf-8') as file:
+		license_md = file.read()
+	
+	about_html = markdown(about_md, extensions=['nl2br', 'fenced_code'])
+	license_html = markdown(license_md, extensions=['nl2br', 'fenced_code'])
 	
 	cpy = render_args.copy()
 	cpy['about_html'] = about_html
+	cpy['license_html'] = license_html
 	render_main_page(PurePath('about.html'), cpy)
