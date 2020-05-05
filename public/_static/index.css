@@ -7,35 +7,28 @@ h2 {
 /* ==================================== */
 
 .sort-by {
-    margin: 8px 8px;
+    margin: 0 0 0 8px;
     padding: 0;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
 }
 
 .sort-by ul {
-
 	margin: 0;
 	padding: 0;
 }
 
 .sort-by li {
-	margin-right: 16px;
-	margin: 0;
-	margin-top: 8px;
-	margin-right: 16px;
-	padding: 0;
-	/* padding: 4px; */
-	/* height: fit-content; */
+	display: inline-flex;
+	margin: 8px 16px 0 0;
 }
 
 .sort-by a {
-	display: inline-block;
-	/* font-size: 16px; */
-	margin: 0;
-	/* padding: 3px; */
+	padding: 4px 0 4px 4px;
 	background-color: #19191987;
+}
+
+.sort-by a + a {
+	padding-left: 0;
+	border-left: 1px dotted #888888;
 }
 
 .sort-by a:hover {
@@ -45,16 +38,7 @@ h2 {
 .sort-by span {
 	display: inline-block;
 	text-align: center;
-}
-
-.sort-by span.name {
-	margin: 2px 6px;
-	/* padding: 6px 0px; */
-}
-
-.sort-by span.icon {
-    margin: 2px 6px;
-    /* width: 20px; */
+	margin: 0 6px;
 }
 
 /* ==================================== */

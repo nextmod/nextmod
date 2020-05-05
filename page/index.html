@@ -16,14 +16,10 @@
 		<h2>{{ group.spec.name_singular }}: {{ group_entry.name }}</h2>
 		{% endif %}
 		<ul class="sort-by">
-			{% for sort_link in sort_links %}
+			{% for l in sort_links %}
 			<li>
-				<a href="{{ sort_link.asc_url | makepath }}">
-					<span class="name">{{ sort_link.name }}</span><span class="icon">↧</span>
-				</a>
-				<a href="{{ sort_link.dsc_url | makepath }}">
-					<span class="icon">↥</span>
-				</a>
+				<a href="{{ l.asc_url | makepath }}">{{ l.name }}<span>↧</span></a>
+				<a href="{{ l.dsc_url | makepath }}"><span>↥</span></a>
 			</li>
 			{% endfor %}
 		</ul>
