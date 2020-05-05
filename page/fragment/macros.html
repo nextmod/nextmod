@@ -6,9 +6,11 @@
 
 
 {% macro style(paths) %}
+<link rel="stylesheet" href="{{ '_static/theme.css' | makepath }}">
 {% for path in paths %}
 <link rel="stylesheet" href="{{ path | makepath }}">
 {% endfor -%}
+<link rel="stylesheet" href="{{ '_static/theme-override.css' | makepath }}">
 {%- endmacro %}
 
 

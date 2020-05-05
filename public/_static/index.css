@@ -23,6 +23,7 @@ h2 {
 .sort-by li {
 	margin-right: 16px;
 	margin: 0;
+	margin-top: 8px;
 	margin-right: 16px;
 	padding: 0;
 	/* padding: 4px; */
@@ -61,7 +62,6 @@ h2 {
 /* ==================================== */
 
 .mod-list {
-	list-style: none;
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	grid-gap: 8px;
@@ -69,20 +69,15 @@ h2 {
 	margin: 8px;
 	padding: 0;
 }
+
+/* ================ */
+
 .mod-tile {
 	display: flex;
 	flex-direction: column;
 	/* min-width: 340px; */
 	max-width: 500px;
-	/* margin: 8px; */
 	background-color: #0000003b;
-}
-.mod-tile p {
-    margin: 0;
-    padding-top: 2px;
-    padding-bottom: 2px;
-	padding-left: 8px;
-	padding-right: 8px;
 }
 
 .mod-tile img {
@@ -94,19 +89,61 @@ h2 {
 	/* max-height:95px; */
 }
 
-.mod-tile .name {
-	font-size: 1.3em;
+.mod-tile .info {
+	margin: 0;
+	padding: 8px;
+	display: grid;
+	grid-row-gap: 2px;
+	grid-template-columns: min-content auto;
 }
 
+.mod-tile .info dt {
+    grid-column-start: 1;
+    white-space: nowrap;
+}
+
+.mod-tile .info dd {
+	grid-column-start: 2;
+	margin-left: 20px;
+}
+
+.mod-tile .info .name {
+	display: none;
+}
+.mod-tile .info .name + dd {
+	grid-column-start: 1;
+	grid-column-end: 3;
+
+	font-size: 1.3em;
+	margin-bottom: 6px;
+}
+
+/* ================ */
+
 .mod-tile .description {
+    margin: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+
 	flex-grow: 10;
 	background-color:#272727;
     padding-top: 8px;
     padding-bottom: 8px;
 }
 
-.mod-tile .footer {
+/* ================ */
+
+.mod-tile .meta-info {
+	margin: 0;
+	display: flex;
 	padding: 4px;
-	padding-left: 12px;
+	padding-left: 8px;
 	background-color:#00000054;
+}
+
+.mod-tile .meta-info dd {
+	margin-left: 6px;
+	margin-right: 20px;
 }

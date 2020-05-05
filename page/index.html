@@ -27,26 +27,38 @@
 			</li>
 			{% endfor %}
 		</ul>
-		<ul class="mod-list">
+		<ol class="mod-list">
 		{% for mod in mods %}
 			<li class="mod-tile">
 				<a href="{{ mod.link | makepath }}">
 					{{ macro.picture(mod.picture_preview) | ind(5) }}
 				</a>
-				<p class="name">{{ mod.info.name }}</p>
-				<p class="category">{{ mod.info.category }}</p>
-				<p class="author"><span>Author:</span>{{ mod.info.creators | join(", ", attribute='name') }}</p>
-				<p class="update_date"><span>Update date:</span>{{ mod.info.update_date }}</p>
-				<p class="release_date"><span>Release date:</span>{{ mod.info.release_date }}</p>
+				<dl class="info">
+					<dt class="name">Name</dt>
+					<dd>{{ mod.info.name }}</dd>
+					<dt class="category">Category</dt>
+					<dd>{{ mod.info.category }}</dd>
+					<dt class="creators">Creator</dt>
+					{% for creator in mod.info.creators %}
+					<dd>{{ creator.name }}</dd>
+					{% endfor %}
+					<dt class="release-date">Release</dt>
+					<dd>{{ mod.info.release_date }}</dd>
+					<dt class="update-date">Update</dt>
+					<dd>{{ mod.info.update_date }}</dd>
+				</dl>
 				<p class="description">{{ mod.info.description }}</p>
-				<div class="footer">
-					<span>Size: {{ mod.data_files_size | human_bytes }}</span>
-					<span>Files: {{ mod.data_files | count }}</span>
-					<span>Stars: {{ mod.star_count }}</span>
-				</div>
+				<dl class="meta-info">
+					<dt class="size">Size</dt>
+					<dd>{{ mod.data_files_size | human_bytes }}</dd>
+					<dt class="files">Files</dt>
+					<dd>{{ mod.data_files | count }}</dd>
+					<dt class="stars">Stars</dt>
+					<dd>{{ mod.star_count }}</dd>
+				</dl>
 			</li>
 		{% endfor %}
-		</ul>
+		</ol>
 		{{ macro.footer() | ind(2) }}
 	</body>
 </html>
