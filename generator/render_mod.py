@@ -198,31 +198,40 @@ def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
 	mod.picture_preview = mod.image_previews[0].thumb_pictures
 	
-	# page
-	page_files_gen = mod.repository.list_dir(dir_path='page')
+	render_mod_page_main(all_mods, all_grps, mod)
+
+
+def render_mod_page_main(all_mods, all_grps, mod: Mod):
+	
+	mod_directory = PurePath('mw') / mod.id	
+	
+	info_data = mod.repository.get_file(PurePath('mod-info.md'))
+	mod.info_html = markdown.markdown(info_data.decode('utf-8'), extensions=[])
+	
+	page_files_gen = mod.repository.list_dir(PurePath('page'))
 	for file_name in page_files_gen:
-		if file_name.endswith('.md'):
+		if file_name == 'index.html':
+			g_log.warn('Reserved filename in page directory, skipped')
+			continue
+		if file_name == 'image':
+			g_log.warn('Reserved filename in page directory, skipped')
 			continue
 		
+		# TODO more filtering ?
+		
+		# Just copy everything
 		file_data = mod.repository.get_file(file_path='page/' + file_name)
-		with g_target.checked_open(page_directory / file_name, 'wb') as f:
+		with g_target.checked_open(mod_directory / file_name, 'wb') as f:
 			f.write(file_data)
-	
-	info_data = mod.repository.get_file(file_path='mod-info.md')
-	page_data = mod.repository.get_file(file_path='page/page.md')
-	
-	if info_data:
-		mod.info_html = markdown.markdown(info_data.decode('utf-8'), extensions=[])
-	
-	if page_data:
-		mod.page_html = markdown.markdown(page_data.decode('utf-8'), extensions=['nl2br', NextmodMarkdown()])
-	
-	out_path = PurePath('mw') / str(mod.id) / 'index.html'
-	
-	render_args = {
-		'mods': all_mods,
-		'groups': all_grps,
-		'mod': mod
-	}
-	
-	render_main_page(PurePath('mod.html'), render_args, out_path)
+		
+		if file_name == 'page.md':
+			mod.page_html = markdown.markdown(file_data.decode('utf-8'), extensions=['nl2br', NextmodMarkdown()])
+			out_path = mod_directory / 'index.html'
+			
+			render_args = {
+				'mods': all_mods,
+				'groups': all_grps,
+				'mod': mod
+			}
+			
+			render_main_page(PurePath('mod.html'), render_args, out_path)
