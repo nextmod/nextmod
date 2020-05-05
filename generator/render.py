@@ -10,7 +10,7 @@ from markupsafe import Markup
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jinja2 import contextfilter
 
-from generator.common import g_log, g_public_dir
+from generator.target import g_target
 
 
 jinja_env = Environment(
@@ -48,6 +48,8 @@ def makepath(ctx, *args):
 
 	current_depth = len(current_path.parent.parts)
 	
+	# os.path.commonprefix(list)
+	
 	i = 0
 	for a, b in zip(current_path.parent.parts, target.parent.parts):
 		if a != b:
@@ -74,8 +76,5 @@ def render_main_page(page_name: PurePath, render_dict: dict, out_page_name: Pure
 	template = jinja_env.get_template(str(page_name))
 	rendered = template.render(render_dict)
 	
-	p = g_public_dir / out_page_name
-	os.makedirs(p.parent, exist_ok=True)
-	
-	with open(p, 'w') as f:
+	with g_target.checked_open(out_page_name, 'w') as f:
 		f.write(rendered)

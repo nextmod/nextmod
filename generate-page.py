@@ -17,6 +17,8 @@ from generator.render_index import render_index_pages
 from generator.source_directory import DirectorySource
 from generator.source_gitlab import GitlabSource
 
+from generator.target import g_target
+
 
 image_processor = ImageProcessor()
 
@@ -99,10 +101,8 @@ def generate_search_data(all_mods: Tuple[Mod]):
 
 	data = {'mods': mods, 'words': all_words}
 
-	data_file = g_public_dir / 'search-data.json'
-
 	import json
-	with open(data_file, 'w', encoding='utf-8') as f:
+	with g_target.checked_open(PurePath('search-data.json'), 'w') as f:
 		json.dump(data, f, ensure_ascii=False, indent=1)
 
 

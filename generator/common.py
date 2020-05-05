@@ -20,7 +20,6 @@ logging.basicConfig(
 g_log = logging.getLogger()
 g_log.setLevel(logging.INFO)
 
-g_public_dir = Path('./public')
 
 class Picture(NamedTuple):
 	base_name: str

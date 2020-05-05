@@ -10,7 +10,7 @@ def create_id_from_name(name):
 	name = name\
 		.lower()\
 		.replace(' ', '-')\
-		.replace('/', '-')\
+		.replace('/', 'and')\
 		.replace('\\', '-')
 
 	# XXX add hash from original name

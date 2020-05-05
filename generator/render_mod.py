@@ -1,7 +1,8 @@
 # Copyright (c) 2020, Eli2
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import io
+from io import BytesIO
+
 from pathlib import PurePath
 from PIL import Image
 from typing import Optional, Tuple
@@ -9,20 +10,22 @@ from typing import Optional, Tuple
 import markdown
 from generator.markdown_flavour import NextmodMarkdown
 
-from .common import g_public_dir, g_log, PicSrc, Picture, Mod, PreviewEntry
+from .common import g_log, PicSrc, Picture, Mod, PreviewEntry
 from .render import render_main_page
-
-
-
+from .target import g_target
 
 
 def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
-	out_mod_dir = g_public_dir / 'mw' / mod.id
-	out_mod_dir.mkdir(parents=True, exist_ok=True)
+	mod_directory = PurePath('mw') / mod.id	
+	image_directory = mod_directory / 'image'
+	page_directory = mod_directory / 'page'
 	
-	out_img_dir = out_mod_dir / 'image'
-	out_img_dir.mkdir(parents=True, exist_ok=True)
+	#out_mod_dir = g_public_dir / 'mw' / mod.id
+	#out_mod_dir.mkdir(parents=True, exist_ok=True)
+	
+	#out_img_dir = out_mod_dir / 'image'
+	#out_img_dir.mkdir(parents=True, exist_ok=True)
 	
 	mod.link = 'mw/{}/index.html'.format(mod.id)
 	
@@ -93,7 +96,7 @@ def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 
 		try:
 			image_data = mod.repository.get_file(file_path='image/' + input_file_name)
-			image = Image.open(io.BytesIO(image_data))
+			image = Image.open(BytesIO(image_data))
 			# image.verify()
 		except Exception as ex:
 			g_log.log("Failed to load image: {}".format(input_file_name))
@@ -130,19 +133,19 @@ def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 		if image.format in ['PNG']:
 			img = image.convert('RGB')
 			name = image_info.out_name('jpg') 
-			with open(out_img_dir / name, 'wb') as f:
+			with g_target.checked_open(image_directory / name, 'wb') as f:
 				img.save(f, 'JPEG')
 				picture.append(PicSrc(out_rel_url(name), 'image/jpeg'))
 			
 			name = image_info.out_name('webp')
-			with open(out_img_dir / name, 'wb') as f:
+			with g_target.checked_open(image_directory / name, 'wb') as f:
 				image.save(f, 'WebP', quality=100)
 				picture.append(PicSrc(out_rel_url(name), 'image/webp'))
 		
 		else:
 			name = image_info.out_name(image_info.base_ext)
 			mime = Image.MIME[image.format]
-			with open(out_img_dir / name, 'wb') as f:
+			with g_target.checked_open(image_directory / name, 'wb') as f:
 				image.save(f)
 				picture.append(PicSrc(out_rel_url(name), mime))
 		
@@ -157,12 +160,12 @@ def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 			
 			img = thumb.convert('RGB')
 			name = image_info.out_name('jpg', 'thumb')
-			with open(out_img_dir / name, 'wb') as f:
+			with g_target.checked_open(image_directory / name, 'wb') as f:
 				img.save(f, 'JPEG')
 				thumb_pictures.append(PicSrc(out_rel_url(name), 'image/jpeg'))
 			
 			name = image_info.out_name('webp', 'thumb')
-			with open(out_img_dir / name, 'wb') as f:
+			with g_target.checked_open(image_directory / name, 'wb') as f:
 				thumb.save(f, 'WebP')
 				thumb_pictures.append(PicSrc(out_rel_url(name), 'image/webp'))
 
@@ -202,7 +205,7 @@ def render_mod_page(app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 			continue
 		
 		file_data = mod.repository.get_file(file_path='page/' + file_name)
-		with open(out_mod_dir / file_name, 'wb') as f:
+		with g_target.checked_open(page_directory / file_name, 'wb') as f:
 			f.write(file_data)
 	
 	info_data = mod.repository.get_file(file_path='mod-info.md')
