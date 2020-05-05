@@ -41,6 +41,22 @@ img {
 }
 
 /* ==================================== */
+
+.btn {
+	
+}
+
+.btn:hover {
+	background-color: #ddd;
+	color: black;
+}
+
+.btn.active {
+	background-color: #347737;
+	color: white;
+}
+
+/* ==================================== */
 /* Header                               */
 /* ==================================== */
 

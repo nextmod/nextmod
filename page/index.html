@@ -17,9 +17,11 @@
 		{% endif %}
 		<ul class="sort-by">
 			{% for l in sort_links %}
-			<li class="{{ 'active' if sort_by.id == l.id }}">
-				<a href="{{ l.asc_url | makepath }}" class="{{ 'active' if not sort_order.reverse }}">{{ l.name }}<span>↧</span></a>
-				<a href="{{ l.dsc_url | makepath }}" class="{{ 'active' if sort_order.reverse }}"><span>↥</span></a>
+			{% set asc_active = sort_by.id == l.id and not sort_order.reverse %}
+			{% set dsc_active = sort_by.id == l.id and sort_order.reverse %}
+			<li>
+				<a href="{{ l.asc_url | makepath }}" class="btn {{ 'active' if asc_active }}">{{ l.name }}<span>↧</span></a>
+				<a href="{{ l.dsc_url | makepath }}" class="btn {{ 'active' if dsc_active }}"><span>↥</span></a>
 			</li>
 			{% endfor %}
 		</ul>

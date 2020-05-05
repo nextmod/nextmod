@@ -16,13 +16,13 @@
 
 {% macro header(groups) %}
 <header>
-	<a href="{{ 'index.html' | makepath }}">Nextmods</a>
+	<a href="{{ 'index.html' | makepath }}" class="btn">Nextmods</a>
 	<div class='spacer'></div>
 	{% for group in groups %}
-	<a href="{{ (group.spec.id, 'index.html') | makepath }}">{{group.spec.name}}</a>
+	<a href="{{ (group.spec.id, 'index.html') | makepath }}" class="btn">{{group.spec.name}}</a>
 	{% endfor %}
 	<div class="expander"></div>
-	<a href="{{ 'about.html' | makepath }}">About</a>
+	<a href="{{ 'about.html' | makepath }}" class="btn">About</a>
 	<input id='search-box' type="text" placeholder="Sorry, search needs JS" disabled>
 </header>
 {%- endmacro %}
