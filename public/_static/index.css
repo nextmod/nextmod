@@ -93,6 +93,8 @@ h2 {
 	margin: 0;
 	padding: 8px;
 	display: grid;
+	min-height: 100px;
+	align-items: start;
 	grid-row-gap: 2px;
 	grid-template-columns: min-content auto;
 }
