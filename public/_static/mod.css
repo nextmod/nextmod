@@ -30,12 +30,27 @@
 }
 
 .banner .category {
-	font-size: 10px;
+	font-size: 12px;
+	padding: 0 0 0 3px;
 }
 
 .banner .name {
 	font-size: 40px;
 }
+
+.banner .creators {
+	font-size: 16px;
+	padding: 4px 4px;
+}
+
+.banner .creator {
+	font-size: 22px;
+	margin: 4px 4px;
+}
+.banner .creators .small {
+	font-size: 12px;
+}
+
 
 .banner-overlay-right {
 	grid-row: 3;
@@ -46,6 +61,20 @@
 	font-size: 32px;
 	padding: 6px;
 	background-color: #d3d3d347;
+}
+
+/* ===================================== */
+/* ===================================== */
+
+.info-container {
+	margin: 8px;
+	padding: 0;
+	background-color: #404040;
+	display: flex;
+}
+
+.info-container .update {
+	padding: 8px;
 }
 
 /* ===================================== */

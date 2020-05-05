@@ -11,10 +11,13 @@
 		<div class="banner">
 			{{ macro.picture(mod.banner_picture, 'banner-image') | ind(3) }}
 			<div class="banner-overlay-left">
-				<a class="category" href="{{ mod.info.category | makepath }}">{{ mod.info.category.name }}</a>
 				<div class="name">{{ mod.info.name }}</div>
-				<div class="banner-mod-last-update"><span>Last Update:</span>{{ mod.info.update_date }}</div>
-				<div class="banner-mod-author"><span>Author:</span>{{ mod.info.creators | join(", ", attribute='name') }}</div>
+				<a class="category" href="{{ mod.info.category | makepath }}">{{ mod.info.category.name }}</a>
+				<div class="creators"><span class="small">by</span>
+				{% for creator in mod.info.creators -%}
+				<a class="creator" href="{{ creator | makepath }}">{{ creator.name }}</a>
+				{%- endfor %}
+				</div>
 			</div>
 			<div class="banner-overlay-right">
 					<div class="banner-install">Install</div>
@@ -46,6 +49,10 @@
 					</a>
 				</div>
 			{% endfor %}
+		</div>
+		<div class="info-container">
+			<div class="update"><span>Released:</span>{{ mod.info.release_date }}</div>
+			<div class="update"><span>Updated:</span>{{ mod.info.update_date }}</div>
 		</div>
 		<ul class="tags-container">
 			{% for tag in mod.info.tags %}
