@@ -2,6 +2,10 @@
 
 Nextmods is a static site generator for rendering a mod index.
 
+#### Q&A
+##### Why do the links point to ugly index.html files instead of nice directories ?
+This enabled the pages to be used without a WebServer.
+
 ## mod-info.md file structure
 ```
 # Name
