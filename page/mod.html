@@ -8,11 +8,11 @@
 	</head>
 	<body>
 		{{ macro.header(groups) | ind(2) }}
-		<div class="banner-container">
+		<div class="banner">
 			{{ macro.picture(mod.banner_picture, 'banner-image') | ind(3) }}
 			<div class="banner-overlay-left">
-				<div class="banner-mod-category">{{ mod.info.category.name }}</div>
-				<div class="banner-mod-name">{{ mod.info.name }}</div>
+				<a class="category" href="{{ mod.info.category | makepath }}">{{ mod.info.category.name }}</a>
+				<div class="name">{{ mod.info.name }}</div>
 				<div class="banner-mod-last-update"><span>Last Update:</span>{{ mod.info.update_date }}</div>
 				<div class="banner-mod-author"><span>Author:</span>{{ mod.info.creators | join(", ", attribute='name') }}</div>
 			</div>

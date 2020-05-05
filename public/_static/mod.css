@@ -9,7 +9,7 @@
 }
 
 
-.banner-container {
+.banner {
 	/* min-height: 200px; */
 	display: grid;
 	grid-template-rows: 5px 1fr min-content 5px;
@@ -29,11 +29,11 @@
 	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-.banner-mod-category {
+.banner .category {
 	font-size: 10px;
 }
 
-.banner-mod-name {
+.banner .name {
 	font-size: 40px;
 }
 
