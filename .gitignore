@@ -2,6 +2,7 @@
 .idea
 .pyenv
 venv
+.venv
 
 private-*
 

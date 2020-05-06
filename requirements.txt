@@ -1,4 +1,5 @@
 GitPython
+github3.py
 python-gitlab
 jinja2
 Markdown

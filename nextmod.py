@@ -16,6 +16,7 @@ from generator.render_mod import render_mod_page
 from generator.render_index import render_index_pages
 
 from generator.source_directory import DirectorySource
+from generator.source_github import GitHubSource
 from generator.source_gitlab import GitlabSource
 
 from generator.target import g_target
@@ -111,7 +112,7 @@ def generate_search_data(all_mods: Tuple[Mod]):
 
 def main():
 	parser = argparse.ArgumentParser(description='Static site generator for browsing mod repositories')
-	parser.add_argument('-s', '--source', choices=['local', 'gitlab'])
+	parser.add_argument('-s', '--source', choices=['local', 'gitlab', 'github'])
 	parser.add_argument('--dev-skip-image-transcode', action='store_true')
 
 	app_args = parser.parse_args()
@@ -125,8 +126,10 @@ def main():
 
 	if app_args.source == 'local':
 		source = DirectorySource()
-	else:
+	elif app_args.source == 'gitlab':
 		source = GitlabSource()
+	else:
+		source = GitHubSource()
 
 	all_mods = load_mod_repositories(source.list_mods())
 	all_grps = build_groups(all_mods)

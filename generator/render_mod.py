@@ -196,7 +196,8 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	mod.banner_picture = banner_picture
 	mod.image_previews = image_previews
 	
-	mod.picture_preview = mod.image_previews[0].thumb_pictures
+	if mod.image_previews:
+		mod.picture_preview = mod.image_previews[0].thumb_pictures
 	
 	render_mod_page_main(config, all_mods, all_grps, mod)
 

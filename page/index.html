@@ -29,7 +29,11 @@
 		{% for mod in mods %}
 			<li class="mod-tile">
 				<a href="{{ mod.link | makepath }}">
+					{% if mod.picture_preview %}
 					{{ macro.picture(mod.picture_preview) | ind(5) }}
+					{% else %}
+					<div>No Image</div>
+					{% endif%}
 				</a>
 				<dl class="info">
 					<dt class="name">Name</dt>
