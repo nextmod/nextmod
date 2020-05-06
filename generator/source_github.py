@@ -3,7 +3,7 @@
 
 from github3 import GitHub
 from github3.session import GitHubSession
-from github3.exceptions import GitHubError
+from github3.exceptions import GitHubError, NotFoundError
 
 import base64
 
@@ -22,6 +22,12 @@ class GitHubSource(RepositorySource):
 		org = self.gh.organization('nextmod')
 		repos = org.repositories()
 		for repo in repos:
+			try:
+				repo.file_contents('mod-info.md')
+			except NotFoundError as ex:
+				g_log.info(f'mod-info file not found in repository {repo.name}, skipping')
+				continue
+				
 			p = GitHubRepository()
 			p.id = repo.name
 			p.name = repo.name
