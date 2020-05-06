@@ -110,9 +110,23 @@ def generate_search_data(all_mods: Tuple[Mod]):
 		json.dump(data, f, ensure_ascii=False, indent=1)
 
 
+def generate_index_json(all_mods: Tuple[Mod]):
+	
+	json_mods = []
+	json_mods.append("nextmod-v1")
+	for mod in all_mods:
+		json_mods.append({
+			'id': mod.id
+		})
+	
+	import json
+	with g_target.checked_open(PurePath('index.json'), 'w') as f:
+		json.dump(json_mods, f, ensure_ascii=False)
+	
+
 def main():
 	parser = argparse.ArgumentParser(description='Static site generator for browsing mod repositories')
-	parser.add_argument('-s', '--source', choices=['local', 'gitlab', 'github'])
+	parser.add_argument('-s', '--source', choices=['local', 'gitlab', 'github', 'remotes'])
 	parser.add_argument('--dev-skip-image-transcode', action='store_true')
 
 	app_args = parser.parse_args()
@@ -128,8 +142,12 @@ def main():
 		source = DirectorySource()
 	elif app_args.source == 'gitlab':
 		source = GitlabSource()
-	else:
+	elif app_args.source == 'github':
 		source = GitHubSource()
+	elif app_args.source == 'remotes':
+		source = GitHubSource()
+	else:
+		raise Exception('Unexpected source argument')
 
 	all_mods = load_mod_repositories(source.list_mods())
 	all_grps = build_groups(all_mods)
@@ -149,6 +167,8 @@ def main():
 	
 	g_log.info('Generating index pages')
 	render_index_pages(config, all_mods, all_grps)
+
+	generate_index_json(all_mods)
 
 	g_log.info('DONE')
 
