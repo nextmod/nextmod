@@ -1,0 +1,62 @@
+{
+ "mods": {
+  "mw-testmod-01": {
+   "name": "My Special Mod",
+   "creators": [
+    [
+     "myself",
+     "Myself"
+    ]
+   ],
+   "description": "Makes the game more awesome",
+   "thumbnail": ""
+  }
+ },
+ "words": [
+  [
+   "my",
+   10,
+   "mw-testmod-01"
+  ],
+  [
+   "special",
+   10,
+   "mw-testmod-01"
+  ],
+  [
+   "mod",
+   10,
+   "mw-testmod-01"
+  ],
+  [
+   "myself",
+   8,
+   "mw-testmod-01"
+  ],
+  [
+   "makes",
+   3,
+   "mw-testmod-01"
+  ],
+  [
+   "the",
+   3,
+   "mw-testmod-01"
+  ],
+  [
+   "game",
+   3,
+   "mw-testmod-01"
+  ],
+  [
+   "more",
+   3,
+   "mw-testmod-01"
+  ],
+  [
+   "awesome",
+   3,
+   "mw-testmod-01"
+  ]
+ ]
+}

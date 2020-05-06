@@ -1,0 +1,42 @@
+
+@media only screen and (max-width: 750px) {
+
+body {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+} /* only screen and (max-width: 750px) */
+
+@media print {
+
+.sort-by {
+    display: none;
+}
+
+.mod-list > li {
+    border-style: solid;
+    border-width: 1px;
+    background-color: var(--background-color)
+}
+
+.mod-list .description {
+    border-style: solid;
+    border-width: 1px 0 0 0;
+    background-color: var(--background-color)
+}
+
+.mod-list .footer {
+    border-style: solid;
+    border-width: 1px 0 0 0;
+    background-color: var(--background-color)
+}
+
+footer {
+    border-style: solid;
+    border-width: 1px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+} /* @media print */
