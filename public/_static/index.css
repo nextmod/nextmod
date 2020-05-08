@@ -41,7 +41,7 @@ h2 {
 
 .mod-list {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 	grid-gap: 8px;
 	margin: 8px;
 	padding: 0;
@@ -58,17 +58,48 @@ h2 {
 }
 
 .mod-tile img {
-	object-fit: cover;
-	object-position: 0 0;
-	width: 100%; /* 360 */
-	height: 203px; /* for 16:9 */
+	/* object-fit: cover; */
+	/* object-position: 0 0; */
+	/* width: 100%; */ /* 360 */
+	/* height: 203px; */ /* for 16:9 */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.mod-tile .no-image {
-	object-fit: cover;
-	width: 100%;
-	height: 200px;
+.mod-tile .image-link {
+	display: block;
+	background-color:#232323;
+	height: 203px;
+	/* height: 300px; */
 }
+
+
+.mod-tile .no-image {
+	/* max-width: 360px; */
+	height: 203px;
+	margin-left: auto;
+	margin-right: auto;
+	/* overflow: hidden; */
+	/* padding-top: 56.25%; */
+	/* background-color:#0000; */
+	background-image: radial-gradient(#4c4c4c 15%, transparent 16%), radial-gradient(#3e3e3e 15%, transparent 16%);
+	background-size: 16px 16px;
+	background-position: 0 0, 8px 8px;
+	position: relative;
+}
+
+.mod-tile .no-image div {
+	position: absolute;
+	left:0;
+	top:0;
+	right:0;
+	bottom:0;
+	text-align: center;
+	padding: 60px;
+	overflow: hidden;
+}
+
 
 .mod-tile .info {
 	margin: 0;

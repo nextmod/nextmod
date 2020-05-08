@@ -28,11 +28,11 @@
 		<ol class="mod-list">
 		{% for mod in mods %}
 			<li class="mod-tile">
-				<a href="{{ mod.link | makepath }}">
+				<a class="image-link" href="{{ mod.link | makepath }}">
 					{% if mod.picture_preview %}
 					{{ macro.picture(mod.picture_preview) | ind(5) }}
 					{% else %}
-					<div class="no-image">No Image</div>
+					<div class="no-image"><div>{{ mod.info.name }}</div></div>
 					{% endif%}
 				</a>
 				<dl class="info">
