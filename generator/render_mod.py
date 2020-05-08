@@ -198,20 +198,19 @@ def render_mod_page_main(config, all_mods, all_grps, mod: Mod):
 	mod_directory = PurePath('mw') / mod.id	
 	
 	info_data = mod.repository.get_file(PurePath('mod-info.md'))
+	with g_target.checked_open(mod_directory / 'mod-info.md', 'wb') as f:
+		f.write(info_data)
+	
 	info_html = markdown.markdown(info_data.decode('utf-8'), extensions=[])
 	
 	mod_page_data = None
 	
 	page_files_gen = mod.repository.list_dir(PurePath('page'))
 	for file_name in page_files_gen:
-		if file_name == 'index.html':
-			g_log.warn('Reserved filename in page directory, skipped')
+		if file_name in ['index.html', 'image', 'mod-info.md']:
+			g_log.warn(f'Reserved filename {file_name} in page directory, skipped')
 			continue
-		if file_name == 'image':
-			g_log.warn('Reserved filename in page directory, skipped')
-			continue
-		
-		# TODO more filtering ?
+
 		
 		# Just copy everything
 		file_data = mod.repository.get_file(file_path='page/' + file_name)
