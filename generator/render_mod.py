@@ -15,72 +15,66 @@ from .render import render_main_page
 from .target import g_target
 
 
+def parse_image_filename(filename: str) -> Optional[Picture]:
+	dot_split = filename.rsplit('.')
+	if len(dot_split) != 2:
+		g_log.warn("Image files must have an extension")
+		return None
+	base_name = dot_split[0]
+	base_ext = dot_split[1]
+
+	dash_split = base_name.split('-', 4)
+	image_type = dash_split[0]
+	if image_type == 'banner':
+		return Picture(
+			base_name=base_name,
+			base_ext=base_ext,
+			type=image_type,
+			number='',
+			variant='',
+			description=''
+		)
+	elif image_type == 'preview':
+		if len(dash_split) < 2:
+			g_log.warn("Preview images require at least a number")
+			return None
+
+		number = dash_split[1]
+
+		if len(dash_split) == 2:
+			variant = None
+			description = None
+		elif len(dash_split) == 3:
+			if dash_split[2] in ['a', 'b']:
+				variant = dash_split[2]
+				description = None
+			else:
+				variant = None
+				description = dash_split[2]
+		else:
+			variant = dash_split[2]
+			description = dash_split[3]
+
+		return Picture(
+			base_name=base_name,
+			base_ext=base_ext,
+			type=image_type,
+			number=number,
+			variant=variant,
+			description=description
+		)
+	else:
+		g_log.warn("Unknown image type prefix found %", image_type)
+
+
 def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
 	mod_directory = PurePath('mw') / mod.id	
 	image_directory = mod_directory / 'image'
-	page_directory = mod_directory / 'page'
-	
-	#out_mod_dir = g_public_dir / 'mw' / mod.id
-	#out_mod_dir.mkdir(parents=True, exist_ok=True)
-	
-	#out_img_dir = out_mod_dir / 'image'
-	#out_img_dir.mkdir(parents=True, exist_ok=True)
-	
+		
 	mod.link = 'mw/{}/index.html'.format(mod.id)
 	
 	# images
-	def parse_image_filename(filename: str) -> Optional[Picture]:
-		dot_split = filename.rsplit('.')
-		if len(dot_split) != 2:
-			g_log.warn("Image files must have an extension")
-			return None
-		base_name = dot_split[0]
-		base_ext = dot_split[1]
-		
-		dash_split = base_name.split('-', 4)
-		image_type = dash_split[0]
-		if image_type == 'banner':
-			return Picture(
-				base_name=base_name,
-				base_ext=base_ext,
-				type=image_type,
-				number='',
-				variant='',
-				description=''
-			)
-		elif image_type == 'preview':
-			if len(dash_split) < 2:
-				g_log.warn("Preview images require at least a number")
-				return None
-			
-			number = dash_split[1]
-			
-			if len(dash_split) == 2:
-				variant = None
-				description = None
-			elif len(dash_split) == 3:
-				if dash_split[2] in ['a', 'b']:
-					variant = dash_split[2]
-					description = None
-				else:
-					variant = None
-					description = dash_split[2]
-			else:
-				variant = dash_split[2]
-				description = dash_split[3]
-			
-			return Picture(
-				base_name=base_name,
-				base_ext=base_ext,
-				type=image_type,
-				number=number,
-				variant=variant,
-				description=description
-			)
-		else:
-			g_log.warn("Unknown image type prefix found %", image_type)
-
 	def out_rel_url(name: str):
 		return PurePath('mw') / mod.id / 'image' / name 
 	
@@ -111,23 +105,6 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 			g_log.error('Image file extension %s does not match actual image type %s', image_info.base_ext,
 			            image.format)
 			continue
-		
-
-		"""
-		image_id = input_file_name.split('.')[0]
-		
-		
-		transcode_image = False
-		image_formats_to_transcode_lossless = ['PNG']
-		if image.format in image_formats_to_transcode_lossless:
-			image_output_file_name = image_id + '.webp'
-			transcode_image = True
-		else:
-			image_output_file_name = input_file_name
-		
-		if app_args.dev_skip_image_transcode:
-			transcode_image = False
-		"""
 		
 		picture = []
 		if image.format in ['PNG']:
