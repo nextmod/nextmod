@@ -72,7 +72,6 @@ class Mod:
 	repository: Repository
 	id: str = ''
 	name: str = ''
-	link: str = ''
 	banner_picture: str = ''
 	image_preview: str = ''
 	picture_preview: str = field(default_factory=list)

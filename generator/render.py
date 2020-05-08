@@ -10,7 +10,7 @@ from markupsafe import Markup
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jinja2 import contextfilter
 
-from .common import Category, Tag, Creator, GroupSpec, GroupEntryRef
+from .common import Mod, Category, Tag, Creator, GroupSpec, GroupEntryRef
 from generator.target import g_target
 
 
@@ -41,8 +41,10 @@ def html_indent(s, depth):
 @contextfilter
 def makepath(ctx, pointer):
 	current_path = ctx.environment.globals['g_BAR']
-	
-	if isinstance(pointer, Category):
+
+	if isinstance(pointer, Mod):
+		target = PurePath('mw', pointer.id, 'index.html')
+	elif isinstance(pointer, Category):
 		target = PurePath('category', pointer.id, 'index.html')
 	elif isinstance(pointer, Tag):
 		target = PurePath('tag', pointer.id, 'index.html')

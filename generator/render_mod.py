@@ -71,8 +71,6 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
 	mod_directory = PurePath('mw') / mod.id	
 	image_directory = mod_directory / 'image'
-		
-	mod.link = 'mw/{}/index.html'.format(mod.id)
 	
 	# images
 	def out_rel_url(name: str):

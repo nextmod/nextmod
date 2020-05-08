@@ -28,7 +28,7 @@
 		<ol class="mod-list">
 		{% for mod in mods %}
 			<li class="mod-tile">
-				<a class="image-link" href="{{ mod.link | makepath }}">
+				<a class="image-link" href="{{ mod | makepath }}">
 					{% if mod.picture_preview %}
 					{{ macro.picture(mod.picture_preview) | ind(5) }}
 					{% else %}
@@ -37,7 +37,7 @@
 				</a>
 				<dl class="info">
 					<dt class="name">Name</dt>
-					<dd><a href="{{ mod.link | makepath }}">{{ mod.info.name }}</a></dd>
+					<dd><a href="{{ mod | makepath }}">{{ mod.info.name }}</a></dd>
 					<dt class="category">Category</dt>
 					<dd><a href="{{ mod.info.category | makepath }}">{{ mod.info.category.name }}</a></dd>
 					<dt class="creators">Creator</dt>
