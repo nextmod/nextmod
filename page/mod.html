@@ -9,7 +9,11 @@
 	<body>
 		{{ macro.header(groups) | ind(2) }}
 		<div class="banner">
+			{% if mod.banner_picture %}
 			{{ macro.picture(mod.banner_picture, 'banner-image') | ind(3) }}
+			{% else %}
+			<div class="banner-image"></div>
+			{% endif %}
 			<div class="banner-overlay-left">
 				<div class="name">{{ mod.info.name }}</div>
 				<a class="category" href="{{ mod.info.category | makepath }}">{{ mod.info.category.name }}</a>
@@ -20,9 +24,10 @@
 				</div>
 			</div>
 			<div class="banner-overlay-right">
-					<div class="banner-install">Install</div>
+				<div class="banner-install">Install</div>
 			</div>
 		</div>
+		{% if mod.image_previews %}
 		<div class="preview-thumb-container">
 			{% for preview in mod.image_previews %}
 				<a class="preview-thumb-a" href="#{{ preview.id }}">
@@ -50,6 +55,7 @@
 				</div>
 			{% endfor %}
 		</div>
+		{% endif %}
 		<div class="info-container">
 			<div class="update"><span>Released:</span>{{ mod.info.release_date }}</div>
 			<div class="update"><span>Updated:</span>{{ mod.info.update_date }}</div>
@@ -62,11 +68,11 @@
 		<details class="detail-info">
 			<summary>Info</summary>
 			<div clas="content">
-				{{ mod.info_html | safe | ind(4) }}
+				{{ info_html | safe | ind(4) }}
 			</div>
 		</details>
 		<main>
-			{{ mod.page_html | safe | ind(3) }}
+			{{ page_html | safe | ind(3) }}
 		</main>
 		{{ macro.footer() | ind(2) }}
 	</body>

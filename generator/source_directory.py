@@ -32,8 +32,11 @@ class DirectoryProject(Repository):
 	
 	def list_dir(self, dir_path):
 		foo = self.p_path / dir_path
-		for file_name in os.listdir(foo):
-			yield file_name
+		try:
+			for file_name in os.listdir(foo):
+				yield file_name
+		except FileNotFoundError:
+			yield from []
 	
 	def list_data_files(self) -> Tuple[ModDataFile]:
 		data_path = self.p_path / 'data'

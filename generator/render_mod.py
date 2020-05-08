@@ -184,7 +184,9 @@ def render_mod_page_main(config, all_mods, all_grps, mod: Mod):
 	mod_directory = PurePath('mw') / mod.id	
 	
 	info_data = mod.repository.get_file(PurePath('mod-info.md'))
-	mod.info_html = markdown.markdown(info_data.decode('utf-8'), extensions=[])
+	info_html = markdown.markdown(info_data.decode('utf-8'), extensions=[])
+	
+	mod_page_data = None
 	
 	page_files_gen = mod.repository.list_dir(PurePath('page'))
 	for file_name in page_files_gen:
@@ -203,14 +205,22 @@ def render_mod_page_main(config, all_mods, all_grps, mod: Mod):
 			f.write(file_data)
 		
 		if file_name == 'page.md':
-			mod.page_html = markdown.markdown(file_data.decode('utf-8'), extensions=['nl2br', NextmodMarkdown()])
-			out_path = mod_directory / 'index.html'
+			mod_page_data = file_data
 			
-			render_args = {
-				'config': config,
-				'mods': all_mods,
-				'groups': all_grps,
-				'mod': mod
-			}
-			
-			render_main_page(PurePath('mod.html'), render_args, out_path)
+	if mod_page_data:
+		page_html = markdown.markdown(mod_page_data.decode('utf-8'), extensions=['nl2br', NextmodMarkdown()])
+	else:
+		page_html = f'<p>{mod.description}</p>'
+		
+	out_path = mod_directory / 'index.html'
+	
+	render_args = {
+		'config': config,
+		'mods': all_mods,
+		'groups': all_grps,
+		'mod': mod,
+		'info_html': info_html,
+		'page_html': page_html
+	}
+	
+	render_main_page(PurePath('mod.html'), render_args, out_path)

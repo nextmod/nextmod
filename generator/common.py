@@ -83,10 +83,7 @@ class Mod:
 	star_count: int = 0
 	
 	info: InfoFile = field(default_factory=InfoFile)
-	
-	info_html: str = ''
-	page_html: str = ''
-	
+		
 	data_files: Tuple[str] = field(default_factory=tuple)
 	data_files_size: int = 0
 
