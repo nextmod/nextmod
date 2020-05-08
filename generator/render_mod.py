@@ -132,7 +132,7 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 			thumb_pictures = []
 			
 			thumb = image.copy()
-			thumb_size = (360, 360)
+			thumb_size = (600, 200)
 			thumb.thumbnail(thumb_size, Image.ANTIALIAS)
 			
 			img = thumb.convert('RGB')
