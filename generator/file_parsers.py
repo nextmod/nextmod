@@ -24,6 +24,7 @@ class MarkdownFile:
 	def parse(self, content: bytes):
 		if not content:
 			return
+		self.reset()
 		lines = content.decode('utf-8')
 		for line in lines.splitlines():
 			if not line:
@@ -35,6 +36,9 @@ class MarkdownFile:
 				self.read_li(line[2:])
 			else:
 				self.read_text(line)
+
+	def reset(self):
+		pass
 
 	def read_h1(self, line: str):
 		pass
@@ -71,10 +75,30 @@ class ConfigFile(MarkdownFile):
 		return ConfigData(self.instance_name)
 
 
-@dataclass
-class InfoFileParser(InfoFile, MarkdownFile):
+class InfoFileParser(MarkdownFile):
 
 	_lastHeader: str = ''
+	
+	name: str = ''
+	creators: List[Creator] = field(default_factory=list)
+	category: Category = None
+	description: str = ''
+	tags: List[Tag] = field(default_factory=list)
+	release_date: str = ''
+	update_date: str = ''
+	version: str = ''
+
+	def reset(self):
+		self._lastHeader = ''
+	
+		self.name = ''
+		self.creators = list()
+		self.category = None
+		self.description = ''
+		self.tags = list()
+		self.release_date = ''
+		self.update_date = ''
+		self.version = ''
 
 	def read_h1(self, line):
 		self._lastHeader = line
@@ -111,3 +135,15 @@ class InfoFileParser(InfoFile, MarkdownFile):
 		elif self._lastHeader == 'Version':
 			self.version = line
 			self._lastHeader = ''
+	
+	def get_result(self) -> Any:
+		return InfoFile(
+			self.name,
+			self.creators,
+			self.category,
+			self.description,
+			self.tags,
+			self.release_date,
+			self.update_date,
+			self.version,
+		)

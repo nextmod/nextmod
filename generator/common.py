@@ -56,16 +56,16 @@ class Creator(NamedTuple):
 	id: str
 	name: str
 
-@dataclass
-class InfoFile:
-	name: str = ''
-	creators: List[Creator] = field(default_factory=list)
-	category: Category = None
-	description: str = ''
-	tags: List[Tag] = field(default_factory=list)
-	release_date: str = ''
-	update_date: str = ''
-	version: str = ''
+
+class InfoFile(NamedTuple):
+	name: str
+	creators: Tuple[Creator]
+	category: Category
+	description: str
+	tags: Tuple[Tag]
+	release_date: str
+	update_date: str
+	version: str
 
 @dataclass
 class Mod:
@@ -82,7 +82,7 @@ class Mod:
 	last_updated: str = ''
 	star_count: int = 0
 	
-	info: InfoFile = field(default_factory=InfoFile)
+	info: InfoFile = None
 		
 	data_files: Tuple[str] = field(default_factory=tuple)
 	data_files_size: int = 0

@@ -42,7 +42,7 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 		
 		info_parser = InfoFileParser()
 		info_parser.parse(mod_repository.get_file('mod-info.md'))
-		mod.info = info_parser
+		mod.info = info_parser.get_result()
 
 		mods.append(mod)
 	return tuple(mods)
