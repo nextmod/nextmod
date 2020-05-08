@@ -10,25 +10,26 @@ from .source import ModDataFile, RepositorySource, Repository
 
 
 class DirectorySource(RepositorySource):
-	path = Path('../mod/mw')
+
+	def __init__(self, mod_base_path: str):
+		self.path = Path(mod_base_path)
 	
 	def list_mods(self):
-		for mod_name in os.listdir(self.path):
-			path = self.path / mod_name
-			p = DirectoryProject(path=path)
-			p.id = mod_name
-			p.name = mod_name
-			p.p_path = self.path / mod_name
-			yield p
+		for game_id in os.listdir(self.path):
+			for mod_id in os.listdir(self.path / game_id):
+				path = self.path / game_id / mod_id
+				yield DirectoryProject(path, game_id, mod_id)
 
 
 class DirectoryProject(Repository):
-	id = ''
-	name = ''
-	p_path = None
+	p_path: Path
+	game_id: str
+	mod_id: str
 	
-	def __init__(self, path):
+	def __init__(self, path, game_id, mod_id):
 		self.p_path = path
+		self.game_id = game_id
+		self.mod_id = mod_id
 	
 	def list_dir(self, dir_path):
 		foo = self.p_path / dir_path

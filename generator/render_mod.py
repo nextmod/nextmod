@@ -69,12 +69,12 @@ def parse_image_filename(filename: str) -> Optional[Picture]:
 
 def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
-	mod_directory = PurePath('mw') / mod.id	
+	mod_directory = PurePath(mod.repo.game_id) / mod.repo.mod_id
 	image_directory = mod_directory / 'image'
 	
 	# images
 	def out_rel_url(name: str):
-		return PurePath('mw') / mod.id / 'image' / name 
+		return image_directory / name
 	
 	class Foo(NamedTuple):
 		image_info: Picture
@@ -86,7 +86,7 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	
 	banner_picture = None
 	
-	page_images_gen = mod.repository.list_dir(dir_path=PurePath('image'))
+	page_images_gen = mod.repo.list_dir(dir_path=PurePath('image'))
 	for input_file_name in page_images_gen:
 
 		image_info = parse_image_filename(input_file_name)
@@ -94,7 +94,7 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 			continue
 
 		try:
-			image_data = mod.repository.get_file(file_path='image/' + input_file_name)
+			image_data = mod.repo.get_file(file_path='image/' + input_file_name)
 			image = Image.open(BytesIO(image_data))
 			# image.verify()
 		except Exception as ex:
@@ -193,9 +193,9 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 
 def render_mod_page_main(config, all_mods, all_grps, mod: Mod):
 	
-	mod_directory = PurePath('mw') / mod.id	
+	mod_directory = PurePath(mod.repo.game_id) / mod.repo.mod_id
 	
-	info_data = mod.repository.get_file(PurePath('mod-info.md'))
+	info_data = mod.repo.get_file(PurePath('mod-info.md'))
 	with g_target.checked_open(mod_directory / 'mod-info.md', 'wb') as f:
 		f.write(info_data)
 	
@@ -203,7 +203,7 @@ def render_mod_page_main(config, all_mods, all_grps, mod: Mod):
 	
 	mod_page_data = None
 	
-	page_files_gen = mod.repository.list_dir(PurePath('page'))
+	page_files_gen = mod.repo.list_dir(PurePath('page'))
 	for file_name in page_files_gen:
 		if file_name in ['index.html', 'image', 'mod-info.md']:
 			g_log.warn(f'Reserved filename {file_name} in page directory, skipped')
@@ -211,7 +211,7 @@ def render_mod_page_main(config, all_mods, all_grps, mod: Mod):
 
 		
 		# Just copy everything
-		file_data = mod.repository.get_file(file_path='page/' + file_name)
+		file_data = mod.repo.get_file(file_path='page/' + file_name)
 		with g_target.checked_open(mod_directory / file_name, 'wb') as f:
 			f.write(file_data)
 		

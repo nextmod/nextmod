@@ -69,8 +69,7 @@ class InfoFile(NamedTuple):
 
 @dataclass
 class Mod:
-	repository: Repository
-	id: str = ''
+	repo: Repository
 	name: str = ''
 	banner_picture: str = ''
 	image_preview: str = ''

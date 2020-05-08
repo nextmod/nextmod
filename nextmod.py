@@ -30,18 +30,17 @@ def load_mod_repositories(repositories) -> Tuple[Mod]:
 	foo = list(repositories)
 
 	mods = []
-	for mod_repository in foo:
-		g_log.info('Loading mod data: %s', mod_repository.id)
+	for repo in foo:
+		g_log.info(f'Loading: {repo.game_id}~{repo.mod_id}')
 		
-		mod = Mod(repository=mod_repository)
-		mod.id = mod_repository.id
+		mod = Mod(repo=repo)
 				
-		mod.star_count = mod_repository.get_star_count()
-		mod.data_files = mod_repository.list_data_files()
+		mod.star_count = repo.get_star_count()
+		mod.data_files = repo.list_data_files()
 		mod.data_files_size = sum(size for name, size in mod.data_files)
 		
 		info_parser = InfoFileParser()
-		info_parser.parse(mod_repository.get_file('mod-info.md'))
+		info_parser.parse(repo.get_file('mod-info.md'))
 		mod.info = info_parser.get_result()
 
 		mods.append(mod)
@@ -92,16 +91,16 @@ def generate_search_data(all_mods: Tuple[Mod]):
 			all_words.append([word, prio, mod_id])
 
 	for mod in all_mods:
-		mods[mod.id] = {
+		mods[mod.repo.mod_id] = {
 			'name': mod.info.name,
 			'creators': mod.info.creators,
 			'description': mod.info.description,
 			'thumbnail': mod.image_preview
 		}
-		preprocess_words(mod.id, mod.info.name, 10)
+		preprocess_words(mod.repo.mod_id, mod.info.name, 10)
 		for creator in mod.info.creators:
-			preprocess_words(mod.id, creator.name, 8)
-		preprocess_words(mod.id, mod.info.description, 3)
+			preprocess_words(mod.repo.mod_id, creator.name, 8)
+		preprocess_words(mod.repo.mod_id, mod.info.description, 3)
 
 	data = {'mods': mods, 'words': all_words}
 
@@ -116,7 +115,7 @@ def generate_index_json(all_mods: Tuple[Mod]):
 	json_mods.append("nextmod-v1")
 	for mod in all_mods:
 		json_mods.append({
-			'id': mod.id
+			'id': mod.repo.mod_id
 		})
 	
 	import json
@@ -139,7 +138,7 @@ def main():
 	
 
 	if app_args.source == 'local':
-		source = DirectorySource()
+		source = DirectorySource('../mod')
 	elif app_args.source == 'gitlab':
 		source = GitlabSource()
 	elif app_args.source == 'github':
@@ -153,7 +152,7 @@ def main():
 	all_grps = build_groups(all_mods)
 
 	for mod in all_mods:
-		g_log.info('Generating mod page for: {}'.format(mod.repository.id))
+		g_log.info('Generating mod page for: {}'.format(mod.repo.mod_id))
 		try:
 			render_mod_page(config, app_args, all_mods, all_grps, mod)
 		except Exception as ex:

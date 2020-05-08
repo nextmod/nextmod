@@ -43,7 +43,7 @@ def makepath(ctx, pointer):
 	current_path = ctx.environment.globals['g_BAR']
 
 	if isinstance(pointer, Mod):
-		target = PurePath('mw', pointer.id, 'index.html')
+		target = PurePath(pointer.repo.game_id, pointer.repo.mod_id, 'index.html')
 	elif isinstance(pointer, Category):
 		target = PurePath('category', pointer.id, 'index.html')
 	elif isinstance(pointer, Tag):
