@@ -10,7 +10,7 @@ from .source import ModDataFile, RepositorySource, Repository
 
 
 class DirectorySource(RepositorySource):
-	path = Path('../mw')
+	path = Path('../mod/mw')
 	
 	def list_mods(self):
 		for mod_name in os.listdir(self.path):

@@ -10,7 +10,7 @@ from .common import g_log
 from .source import ModDataFile, RepositorySource, Repository
 
 class GitlabSource(RepositorySource):
-	nextmods_gitlab_group_id = 7457398
+	nextmods_gitlab_group_id = 7889336
 	gl = gitlab.Gitlab('https://gitlab.com')
 	
 	def list_mods(self):
