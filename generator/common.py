@@ -120,6 +120,8 @@ class PicSrc(NamedTuple):
 @dataclass
 class PreviewEntry:
 	id: str
+	index: int
+	description: str
 	next_id: str
 	prev_id: str
 	picture: str

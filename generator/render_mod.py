@@ -5,7 +5,7 @@ from io import BytesIO
 
 from pathlib import PurePath
 from PIL import Image
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List, NamedTuple
 
 import markdown
 from generator.markdown_flavour import NextmodMarkdown
@@ -78,8 +78,15 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 	def out_rel_url(name: str):
 		return PurePath('mw') / mod.id / 'image' / name 
 	
+	class Foo(NamedTuple):
+		image_info: Picture
+		picture: List[PicSrc]
+		thumb_pictures: List[PicSrc]
+	
+	
+	foo = []
+	
 	banner_picture = None
-	image_previews = []
 	
 	page_images_gen = mod.repository.list_dir(dir_path=PurePath('image'))
 	for input_file_name in page_images_gen:
@@ -147,30 +154,37 @@ def render_mod_page(config, app_args, all_mods: Tuple[Mod], all_grps, mod: Mod):
 				thumb_pictures.append(PicSrc(out_rel_url(name), 'image/webp'))
 
 			
-			e = PreviewEntry(
-				id=image_info.get_id(),
-				prev_id=None,
-				next_id=None,
-				picture=picture,
-				thumb_pictures=tuple(thumb_pictures)
-			)
-			
-			image_previews.append(e)
-	
-	image_previews.sort(key=lambda x: x.id)
-	
-	for i, preview in enumerate(image_previews):
-		if i == 0:
-			preview.prev_id = image_previews[-1].id
-			preview.next_id = image_previews[i + 1].id
-		elif i == len(image_previews) - 1:
-			preview.prev_id = image_previews[i - 1].id
-			preview.next_id = image_previews[0].id
-		else:
-			preview.prev_id = image_previews[i - 1].id
-			preview.next_id = image_previews[i + 1].id
-	
+			foo.append(Foo(
+				image_info,
+				picture,
+				thumb_pictures
+			))
+
 	mod.banner_picture = banner_picture
+
+	foo.sort(key=lambda x: x.image_info.get_id())
+	image_previews = []
+	for i, preview in enumerate(foo):
+		if i == 0:
+			prev_id = foo[-1].image_info.get_id()
+			next_id = foo[i + 1].image_info.get_id()
+		elif i == len(foo) - 1:
+			prev_id = foo[i - 1].image_info.get_id()
+			next_id = foo[0].image_info.get_id()
+		else:
+			prev_id = foo[i - 1].image_info.get_id()
+			next_id = foo[i + 1].image_info.get_id()
+		
+		image_previews.append(PreviewEntry(
+			id=preview.image_info.get_id(),
+			index=i + 1,
+			description=preview.image_info.description,
+			prev_id=prev_id,
+			next_id=next_id,
+			picture=preview.picture,
+			thumb_pictures=tuple(preview.thumb_pictures)
+		))
+	
 	mod.image_previews = image_previews
 	
 	if mod.image_previews:
