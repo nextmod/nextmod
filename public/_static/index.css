@@ -41,9 +41,8 @@ h2 {
 
 .mod-list {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 	grid-gap: 8px;
-	/* flex-wrap: wrap; */
 	margin: 8px;
 	padding: 0;
 }
@@ -54,17 +53,21 @@ h2 {
 	display: flex;
 	flex-direction: column;
 	/* min-width: 340px; */
-	max-width: 500px;
+	max-width: 490px;
 	background-color: #0000003b;
 }
 
 .mod-tile img {
-	width:100%;
-	/* height: 300px; */
-	/* width: auto; */
-	/* height: auto; */
-	/* max-width: 230px; */
-	/* max-height:95px; */
+	object-fit: cover;
+	object-position: 0 0;
+	width: 100%; /* 360 */
+	height: 203px; /* for 16:9 */
+}
+
+.mod-tile .no-image {
+	object-fit: cover;
+	width: 100%;
+	height: 200px;
 }
 
 .mod-tile .info {
