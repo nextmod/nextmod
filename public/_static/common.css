@@ -1,9 +1,10 @@
 html {
 	line-height: 1.15;
-
 	color: var(--text-color);
 	background-color: var(--background-color);
 	min-width: 360px;
+	overflow-y: overlay;
+	scrollbar-gutter: stable;
 }
 
 body {

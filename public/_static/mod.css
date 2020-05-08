@@ -10,16 +10,19 @@
 
 
 .banner {
-	/* min-height: 200px; */
+	height: 260px;
 	display: grid;
 	grid-template-rows: 5px 1fr min-content 5px;
 	grid-template-columns: 5px 1fr auto minmax(min-content, 10px) 5px;
 	/* grid-template-columns: 5px; */
+	background-color: #171717;
+	overflow: hidden;
 }
 .banner-image {
 	grid-row: 1/5;
 	grid-column: 1/6;
-	width: 100%;
+	/* width: 100%; */
+	/* max-height: 100%; */
 }
 
 .banner-overlay-left {
