@@ -1,5 +1,6 @@
 GitPython
 requests
+sgqlc
 github3.py
 python-gitlab
 jinja2
