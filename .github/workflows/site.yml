@@ -20,6 +20,8 @@ jobs:
         run: python3 -m pip install -r ./requirements.txt
 
       - name: Generate Index
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./nextmod.py -s github
 
       - name: Deploy
