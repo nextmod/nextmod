@@ -20,7 +20,7 @@ class GitHubSource(RepositorySource):
 
 	def __init__(self):
 
-		gh_token = os.environ['GH_TOKEN']
+		gh_token = os.environ.get('GH_TOKEN', None)
 		if gh_token:
 			headers = {'Authorization': 'bearer ' + gh_token}
 		else:
