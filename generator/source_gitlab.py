@@ -4,30 +4,45 @@
 from pathlib import PurePath
 
 import gitlab
-from gitlab import GitlabGetError
+from gitlab import Gitlab, GitlabGetError
 
 from .common import g_log
 from .source import ModDataFile, RepositorySource, Repository
 
+# https://python-gitlab.readthedocs.io/en/stable/
+
 class GitlabSource(RepositorySource):
-	nextmods_gitlab_group_id = 7889336
-	gl = gitlab.Gitlab('https://gitlab.com')
+	gl: Gitlab
+	root_group_path: str
+	
+	def __init__(self):
+		self.root_group_path = 'nextmod/mod'
+		self.gl = Gitlab('https://gitlab.com')
 	
 	def list_mods(self):
-		group = self.gl.groups.get(self.nextmods_gitlab_group_id)
-		for group_project in group.projects.list():
-			project = self.gl.projects.get(group_project.id, lazy=False)
-			p = GitlabProject()
-			p.id = project.path
-			p.name = project.name
-			p.p_project = project
-			yield p
+		root_group = self.gl.groups.get(self.root_group_path)
+		for game_subgroup in root_group.subgroups.list():
+			game_id = game_subgroup.name
+			game_group = self.gl.groups.get(game_subgroup.id)
+			for mod_groupproject in game_group.projects.list():
+				mod_id = mod_groupproject.name
+				project = self.gl.projects.get(mod_groupproject.id, lazy=False)
+				yield GitlabProject(self, project, game_id, mod_id)
 
 
 class GitlabProject(Repository):
-	id = ''
-	name = ''
+	
+	game_id: str
+	mod_id: str
+	
 	p_project = None
+	
+	def __init__(self, src, proj, game_id, mod_id):
+		self.src = src
+		self.p_project = proj
+		self.game_id = game_id
+		self.mod_id = mod_id
+		
 	
 	def list_dir(self, dir_path):
 		path_str = str(dir_path)
